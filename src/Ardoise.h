@@ -35,7 +35,7 @@ public:
     //
     // Contrat :
     //
-	 void ajouter(Forme* f);
+	 void ajouter(Forme* f, bool load);
 	 void supprimer(Forme* f);
 	 void afficher() const;
 	 void enumerer() const;
@@ -44,6 +44,7 @@ public:
 	 Forme* rechercheParNom(const std::string& nom);
 	 string undo();
 	 string redo();
+	 void ajouterCommande(string commande);
 
 
 //-------------------------------------------- Constructeurs - destructeur

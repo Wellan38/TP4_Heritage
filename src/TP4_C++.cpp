@@ -28,6 +28,7 @@ int Split(vector<string>& vecteur, string chaine, char separateur);
 int stringToInt(string s);
 bool estConvexe(const vector<Point> &lesPoints);
 bool nbPairCoordonnees(int debut,int fin);
+void ajouterForme(string commande,Ardoise& uneArdoise);
 
 int main()
 {
@@ -36,233 +37,18 @@ int main()
 	string commande;
 	vector<string> result;
 
+	vector<string> undoLoad;
+
 	do
 	{
 		cout<<"rentrez la commande"<<endl;
 		getline( cin, commande );
 		Split(result, commande,' ');
 
-//---------------------------------------------------------------Segment---------------------------
-		if(result[0].compare("S")==0)
-		{
-
-			if(lArdoise.rechercheParNom(result[1])==NULL)//--------Si le nom n'existe pas déjà
-			{
-				if(result.size()!=6)//--------------- Si il n'y a pas au moins 6 arguments dans la commande
-				{
-					cout<<"ERR"<<endl;
-				}
-
-				else
-				{
-				Point a(stringToInt(result[2]),stringToInt(result[3]));
-				Point b(stringToInt(result[4]),stringToInt(result[5]));
-				lArdoise.ajouter(new Segment(result[1],commande,segm,a,b));
-				cout<<"OK"<<endl;
-
-				}
-			}
-
-			else
-			{
-				cout<<"ERR"<<endl;
-			}
-
-		}
-//----------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------Rectangle------------------------------------------
-		else if(result[0].compare("R")==0)
-		{
-
-			if(lArdoise.rechercheParNom(result[1])==NULL)//--------Si le nom n'existe pas déjà
-			{
+		ajouterForme(commande,lArdoise);
 
 
-				//-------------Si il n'y a pas assez d'arguments--------------------
-					if(result.size()!=6)
-					{
-						cout<<"ERR"<<endl;
-					}
-                //--------------------------------------------------------------------
-					else
-					{
-						//------------Si le premier point n'est pas celui en haut à gauche -------------------------------
-						if((stringToInt(result[5])>=stringToInt(result[3]))|| (stringToInt(result[2])>=stringToInt(result[4])))
-
-						{
-							cout<<"ERR"<<endl;
-						}
-						//-----------------------------------------------------------------------------------------------------
-						else
-						{
-						Point c(stringToInt(result[2]),stringToInt(result[3]));
-						Point d(stringToInt(result[4]),stringToInt(result[5]));
-						lArdoise.ajouter(new Rectangle(result[1],commande,rect,c,d));
-						cout<<"OK"<<endl;
-						}
-					}
-			}
-			else
-			{
-				cout<<"ERR"<<endl;
-			}
-		}
-//----------------------------------------------------------------------------------------------------------------------------
-//---------------------------------------------------------------Polygone convexe-------------------------------------------
-
-
-
-		else if(result[0].compare("PC")==0)
-		{
-
-			if(lArdoise.rechercheParNom(result[1])==NULL)//--------Si le nom n'existe pas déjà
-			{
-				if(result.size()<8)//---------si il n'y a pas assez d'arguments--------------
-				{
-					cout<<"ERR"<<endl;
-				}
-				else if(!nbPairCoordonnees(2,result.size()))//--------------si le nombre de coordonnées de ppints n'est pas pair
-				{
-					cout<<"ERR"<<endl;
-
-				}
-				else
-				{
-					//--------------------ajout des points dans un vecteur de points----------------
-					vector<Point> lesPoints;
-					for(int i=2;i<result.size();i+=2)
-					{
-
-						lesPoints.push_back(Point(  stringToInt(result[i])   ,stringToInt(result[i+1])  ));
-					}
-
-					//-----------------------si le polygone est convexe-----------------------
-
-					if(estConvexe(lesPoints))
-					{
-						lArdoise.ajouter(new PolygoneConvexe(result[1],commande,poly,lesPoints));
-						cout<<"OK"<<endl;
-
-					}
-					//------------------------------------------------------------------------------
-					else
-					{
-						cout<<"message d'erreur"<<endl;
-					}
-				}
-			}
-			else
-			{
-				cout<<"ERR"<<endl;
-			}
-
-		}
-//---------------------------------------------------------------------------------------------------------------------
-//---------------------------------------------------------------------Union-------------------------------------------
-		else if(result[0].compare("OR")==0)
-		{
-
-			if(lArdoise.rechercheParNom(result[1])==NULL)//--------Si le nom n'existe pas déjà
-			{
-
-
-
-					if(result.size()<4)//--------------------si il n'y a pas assez d'arguments--------------
-					{
-						cout<<"ERR"<<endl;
-					}
-
-					//-----------------Si les noms n'existent pas-----------------------------
-					else
-					{
-
-						bool nomsExistent=true;
-						for(int i=2;i<result.size();i++)
-						{
-							if(lArdoise.rechercheParNom(result[i])==NULL)
-							{
-								nomsExistent=false;
-							}
-						}
-
-						if(nomsExistent)
-						{
-							vector<Forme*> z;
-							for(int i=2;i<result.size();i++)
-							{
-							  z.push_back(lArdoise.rechercheParNom(result[i]));
-
-							}
-							lArdoise.ajouter(new Union(result[1],commande,uni,z));
-							cout<<"OK"<<endl;
-							lArdoise.afficher();
-						}
-
-						//-------------------------------------------------------------------------
-						else
-						{
-							cout<<"ERR"<<endl;
-						}
-					}
-			}
-
-			else
-			{
-				cout<<"ERR"<<endl;
-			}
-
-
-		}
-//--------------------------------------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------Intersection----------------------------------------
-		else if(result[0].compare("OI")==0)
-		{
-
-			if(lArdoise.rechercheParNom(result[1])==NULL)//--------Si le nom n'existe pas déjà
-			{
-					if(result.size()<4)//---------------si il n'y a pas assez d'arguments--------------
-					{
-						cout<<"ERR"<<endl;
-					}
-					//-----------------------si les noms n'existent pas dans la liste------------------
-					else
-					{
-						bool nomsExistent=true;
-						for(int i=2;i<result.size();i++)
-						{
-							if(lArdoise.rechercheParNom(result[i])==NULL)
-							{
-								nomsExistent=false;
-							}
-						}
-
-						if(nomsExistent)
-						{
-							vector<Forme*> z;
-							for(int i=2;i<result.size();i++)
-							{
-								 z.push_back(lArdoise.rechercheParNom(result[i]));
-
-							}
-							lArdoise.ajouter(new Intersection(result[1],commande,inter,z));
-							cout<<"OK"<<endl;
-						}
-						//-------------------------------------------------------------------------------------------
-						else
-						{
-							cout<<"ERR"<<endl;
-						}
-					}
-			}
-			else
-			{
-				cout<<"ERR"<<endl;
-			}
-
-
-		}
-//------------------------------------------------------------------------------------------------------------------------------------
-		else if(result[0].compare("HIT")==0)
+		if(result[0].compare("HIT")==0)
 		{
 			if (result.size() != 4)
 			{
@@ -348,7 +134,7 @@ int main()
 				else
 				{
 					f->deplacer(stringToInt(result[2]),stringToInt(result[3]));
-
+					lArdoise.ajouterCommande("MOVE " + result[2] + " " + result[3]);
 				}
 			}
 
@@ -372,7 +158,7 @@ int main()
 				vector<string> args;
 				Split(args, com, ' ');
 
-				if (args[0].compare("S") || args[0].compare("R") || args[0].compare("PC") || args[0].compare("OR") || args[0].compare("OI"))
+				if (args[0].compare("S") == 0 || args[0].compare("R") == 0 || args[0].compare("PC") == 0 || args[0].compare("OR") == 0 || args[0].compare("OI") == 0)
 				{
 					Forme* f = lArdoise.rechercheParNom(args[1]);
 
@@ -385,6 +171,20 @@ int main()
 						cout << "ERR" << endl;
 					}
 				}
+				else if (args[0].compare("DELETE") == 0)
+				{
+					Forme* f = lArdoise.rechercheParNom(args[1]);
+
+					if (f == NULL)
+					{
+						//ajouterForme(args[3], lArdoise, false);
+					}
+					else
+					{
+						cout << "ERR" << endl;
+						cout << "# La forme " + f->getNom() + " existe déjà." << endl;
+					}
+				}
 			}
 		}
 
@@ -395,19 +195,18 @@ int main()
 
 		else if(result[0].compare("LOAD")==0)
 		{
-			string com = lArdoise.undo();
+			/*ifstream fichier(result[1], ios::in);  // on ouvre le fichier en lecture
 
-			if (com.compare(""))
-			{
-				cout << "ERR" << endl;
-			}
-			else
-			{
-				vector<string> args;
-				Split(args, com, ' ');
+						if(fichier)  // si l'ouverture a réussi
+					    {
+						            // instructions
+						     fichier.close();  // on ferme le fichier
 
-
-			}
+					    }
+						else
+						{
+							cerr << "Impossible d'ouvrir le fichier !" << endl;
+						}*/
 		}
 
 		else if(result[0].compare("SAVE")==0)
@@ -422,7 +221,7 @@ int main()
 
 		else
 		{
-			if(commande.compare("EXIT")!=0)
+			if((commande.compare("EXIT")!=0)&&(result[0].compare("S"))&&(result[0].compare("R"))&&(result[0].compare("PC"))&&(result[0].compare("OR"))&&(result[0].compare("OI")))
 			{
 				cout<<"ERR"<<endl;
 			}
@@ -513,78 +312,220 @@ int Split(vector<string>& vecteur, string chaine, char separateur)
 	return vecteur.size();
 }
 
+//---------------------Ajouter forme--------------------------------------------------------------------------------------------
+
+void ajouterForme(string commande,Ardoise& uneArdoise)
+{
+	vector<string> resultLoad;
+	Split(resultLoad, commande,' ');
+	if(resultLoad[0].compare("S")==0)
+	{
+
+		if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas déjà
+		{
+			if(resultLoad.size()!=6)//--------------- Si il n'y a pas au moins 6 arguments dans la commande
+			{
+				cout<<"ERR"<<endl;
+			}
+
+			else
+			{
+			Point a(stringToInt(resultLoad[2]),stringToInt(resultLoad[3]));
+			Point b(stringToInt(resultLoad[4]),stringToInt(resultLoad[5]));
+			uneArdoise.ajouter(new Segment(resultLoad[1],commande,segm,a,b), false);
+			cout<<"OK"<<endl;
+
+			}
+		}
+
+		else
+		{
+			cout<<"ERR"<<endl;
+		}
+
+	}
+	else if(resultLoad[0].compare("R")==0)
+			{
+
+				if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas déjà
+				{
 
 
+					//-------------Si il n'y a pas assez d'arguments--------------------
+						if(resultLoad.size()!=6)
+						{
+							cout<<"ERR"<<endl;
+						}
+	                //--------------------------------------------------------------------
+						else
+						{
+							//------------Si le premier point n'est pas celui en haut à gauche -------------------------------
+							if((stringToInt(resultLoad[5])>=stringToInt(resultLoad[3]))|| (stringToInt(resultLoad[2])>=stringToInt(resultLoad[4])))
+
+							{
+								cout<<"ERR"<<endl;
+							}
+							//-----------------------------------------------------------------------------------------------------
+							else
+							{
+							Point c(stringToInt(resultLoad[2]),stringToInt(resultLoad[3]));
+							Point d(stringToInt(resultLoad[4]),stringToInt(resultLoad[5]));
+							uneArdoise.ajouter(new Rectangle(resultLoad[1],commande,rect,c,d), false);
+							cout<<"OK"<<endl;
+							}
+						}
+				}
+				else
+				{
+					cout<<"ERR"<<endl;
+				}
+			}
+
+	else if(resultLoad[0].compare("PC")==0)
+			{
+
+				if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas déjà
+				{
+					if(resultLoad.size()<8)//---------si il n'y a pas assez d'arguments--------------
+					{
+						cout<<"ERR"<<endl;
+					}
+					else if(!nbPairCoordonnees(2,resultLoad.size()))//--------------si le nombre de coordonnées de ppints n'est pas pair
+					{
+						cout<<"ERR"<<endl;
+
+					}
+					else
+					{
+						//--------------------ajout des points dans un vecteur de points----------------
+						vector<Point> lesPoints;
+						for(int i=2;i<resultLoad.size();i+=2)
+						{
+
+							lesPoints.push_back(Point(  stringToInt(resultLoad[i])   ,stringToInt(resultLoad[i+1])  ));
+						}
+
+						//-----------------------si le polygone est convexe-----------------------
+
+						if(estConvexe(lesPoints))
+						{
+							uneArdoise.ajouter(new PolygoneConvexe(resultLoad[1],commande,poly,lesPoints), false);
+							cout<<"OK"<<endl;
+
+						}
+						//------------------------------------------------------------------------------
+						else
+						{
+							cout<<"message d'erreur"<<endl;
+						}
+					}
+				}
+				else
+				{
+					cout<<"ERR"<<endl;
+				}
+
+			}
+
+	else if(resultLoad[0].compare("OR")==0)
+	{
+
+	if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas déjà
+	{
+		if(resultLoad.size()<4)//--------------------si il n'y a pas assez d'arguments--------------
+		{
+			cout<<"ERR"<<endl;
+		}
+
+		//-----------------Si les noms n'existent pas-----------------------------
+		else
+		{
+
+			bool nomsExistent=true;
+			for(int i=2;i<resultLoad.size();i++)
+			{
+				if(uneArdoise.rechercheParNom(resultLoad[i])==NULL)
+				{
+					nomsExistent=false;
+				}
+			}
+
+			if(nomsExistent)
+			{
+				vector<Forme*> z;
+				for(int i=2;i<resultLoad.size();i++)
+				{
+				  z.push_back(uneArdoise.rechercheParNom(resultLoad[i]));
+
+				}
+				uneArdoise.ajouter(new Union(resultLoad[1],commande,uni,z), false);
+				cout<<"OK"<<endl;
+				uneArdoise.afficher();
+			}
+
+			//-------------------------------------------------------------------------
+			else
+			{
+				cout<<"ERR"<<endl;
+			}
+		}
+	}
+
+	else
+	{
+		cout<<"ERR"<<endl;
+	}
 
 
+}
+	//--------------------------------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------Intersection----------------------------------------
+			else if(resultLoad[0].compare("OI")==0)
+			{
+
+				if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas déjà
+				{
+						if(resultLoad.size()<4)//---------------si il n'y a pas assez d'arguments--------------
+						{
+							cout<<"ERR"<<endl;
+						}
+						//-----------------------si les noms n'existent pas dans la liste------------------
+						else
+						{
+							bool nomsExistent=true;
+							for(int i=2;i<resultLoad.size();i++)
+							{
+								if(uneArdoise.rechercheParNom(resultLoad[i])==NULL)
+								{
+									nomsExistent=false;
+								}
+							}
+
+							if(nomsExistent)
+							{
+								vector<Forme*> z;
+								for(int i=2;i<resultLoad.size();i++)
+								{
+									 z.push_back(uneArdoise.rechercheParNom(resultLoad[i]));
+
+								}
+								uneArdoise.ajouter(new Intersection(resultLoad[1],commande,inter,z), false);
+								cout<<"OK"<<endl;
+							}
+							//-------------------------------------------------------------------------------------------
+							else
+							{
+								cout<<"ERR"<<endl;
+							}
+						}
+				}
+				else
+				{
+					cout<<"ERR"<<endl;
+				}
 
 
+			}
 
+}//---------------------------------------------------Fin ajouter forme--------------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*Point p1(1,1);
-Point p2(2,0);
-Point p3(3,2);
-Point p4(0,3);
-
-vector<Point> p;
-p.push_back(p1);
-p.push_back(p2);
-p.push_back(p3);
-p.push_back(p4);
-
-vector<Forme*> f;
-Forme *a;
-Forme* b;
-Forme* c;
-
-Segment s("s1","sauv1",segm,p1,p2);
-Rectangle r("r1","sauv2",rect,p3,p4);
-PolygoneConvexe pc("s1","sauv3",poly,p);
-
-
-a=&s;
-b=&r;
-c=&pc;
-Ardoise ad;
-ad.ajouter(a);
-ad.ajouter(b);
-ad.ajouter(c);
-ad.afficher();
-//ad.sauvegarder("test");
-
-
-
-
-/*s.afficher();
-s.deplacer(1,1);
-s.afficher();
-
-
-r.afficher();
-r.deplacer(1,1);
-r.afficher();
-
-
-pc.afficher();
-pc.deplacer(1,1);
-pc.afficher();
-
-f.push_back(a);
-f.push_back(b);
-f.push_back(c);
-
-Intersection i("i1","sauv1",uni,f);*/

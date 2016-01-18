@@ -28,7 +28,7 @@ using namespace std;
 //{
 //} //----- Fin de Méthode
 
-void Ardoise::ajouter(Forme* f)
+void Ardoise::ajouter(Forme* f, bool load)
 {
 
 
@@ -45,7 +45,10 @@ void Ardoise::ajouter(Forme* f)
 	{
 		formes.push_back(f);
 
-		commandes.insert(commandes.begin(), f->getSauvegarde());
+		if (!load)
+		{
+			ajouterCommande(f->getSauvegarde());
+		}
 	}
 	else
 	{
@@ -55,11 +58,15 @@ void Ardoise::ajouter(Forme* f)
 
 void Ardoise::vider()
 {
+	//TODO Ajouter la sauvegarde du modèle actuel dans un fichier "SauvegardePourClear.txt"
+
 	for(int i=0;i<formes.size();i++)
 	{
 		delete formes[i];
 	}
 	formes.clear();
+
+	commandes.insert(commandes.begin(), "CLEAR");
 }
 void Ardoise::supprimer(Forme* f)
 {
@@ -68,8 +75,13 @@ void Ardoise::supprimer(Forme* f)
 	{
 		i++;
 	}
+
+	ajouterCommande("DELETE " + formes[i]->getNom() + formes[i]->getSauvegarde());
+
 	delete formes[i];
 	formes.erase(formes.begin()+i);
+
+
 }
 
 void Ardoise::afficher() const//---------------------------------------------------------
@@ -172,7 +184,7 @@ std::string Ardoise::redo()
 	{
 		std::string com = *commandesAnnulees.begin();
 		commandesAnnulees.erase(commandesAnnulees.begin());
-		commandes.insert(commandes.begin(), com);
+		ajouterCommande(com);
 
 		return com;
 	}
@@ -180,6 +192,11 @@ std::string Ardoise::redo()
 	{
 		return "";
 	}
+}
+
+void Ardoise::ajouterCommande (string commande)
+{
+	commandes.insert(commandes.begin(), commande);
 }
 
 //-------------------------------------------- Constructeurs - destructeur
