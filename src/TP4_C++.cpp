@@ -142,7 +142,6 @@ int main()
 					{
 						lArdoise.ajouter(new PolygoneConvexe(result[1],commande,poly,lesPoints));
 						cout<<"OK"<<endl;
-						lArdoise.afficher();
 					}
 					//------------------------------------------------------------------------------
 					else
@@ -440,6 +439,39 @@ int main()
 bool estConvexe(const vector<Point> &lesPoints)
 {
 	bool cvexe=true;
+	bool positif;
+	bool changerSigne = true;
+
+	for (int i = 0; i < lesPoints.size() - 2; i++)
+	{
+		int dx1 = lesPoints[i+1].getX() - lesPoints[i].getX();
+		int dy1 = lesPoints[i+1].getY() - lesPoints[i].getY();
+		int dx2 = lesPoints[i+2].getX() - lesPoints[i+1].getX();
+		int dy2 = lesPoints[i+2].getY() - lesPoints[i+1].getY();
+
+		int zcrossproduct = dx1*dy2 - dy1*dx2;
+
+		if (changerSigne)
+		{
+			if (zcrossproduct > 0)
+			{
+				positif = true;
+				changerSigne = false;
+			}
+			else if (zcrossproduct < 0)
+			{
+				positif = false;
+				changerSigne = false;
+			}
+		}
+
+		if ((zcrossproduct < 0 && positif) || (zcrossproduct > 0 && !positif))
+		{
+			cvexe = false;
+			break;
+		}
+	}
+
 	return cvexe;
 }
 
@@ -479,7 +511,6 @@ int Split(vector<string>& vecteur, string chaine, char separateur)
 
 	return vecteur.size();
 }
-
 
 
 
