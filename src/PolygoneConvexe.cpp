@@ -55,7 +55,33 @@ PolygoneConvexe* PolygoneConvexe::clone()
 
 bool PolygoneConvexe::contient(int x, int y)
 {
-	return true;
+
+
+	  for(int i=0;i<points.size();i++)
+	  {
+	     Point A = points[i];
+	     float d;
+	     if (i==points.size()-1)
+	     {// si c'est le dernier point, on relie au premier
+	        Point B = points[0];
+	        Point VectA(B.getX() - A.getX(),B.getY() - A.getY());
+	        Point VectB(x - A.getX(),y - A.getY());
+	        d = VectA.getX()*VectB.getY() - VectA.getY()*VectB.getX();
+	     }
+	     else
+	     {// sinon on relie au suivant.
+	        Point B = points[i+1];
+	        Point VectA(B.getX() - A.getX(),B.getY() - A.getY());
+	        Point VectB(x - A.getX(),y - A.getY());
+	        d = VectA.getX()*VectB.getY() - VectA.getY()*VectB.getX();
+	     }
+
+	     if (d>0)
+	        return false;  // un point à gauche et on arrête tout.
+	  }
+	  return true;  // si on sort du for, c'est qu'aucun point n'est à droite, donc c'est bon.
+
+
 }
 
 
