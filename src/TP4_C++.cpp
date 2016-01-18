@@ -142,6 +142,7 @@ int main()
 					{
 						lArdoise.ajouter(new PolygoneConvexe(result[1],commande,poly,lesPoints));
 						cout<<"OK"<<endl;
+
 					}
 					//------------------------------------------------------------------------------
 					else
@@ -362,7 +363,7 @@ int main()
 		{
 			string com = lArdoise.undo();
 
-			if (com.compare(""))
+			if (com.compare("") == 0)
 			{
 				cout << "ERR" << endl;
 			}

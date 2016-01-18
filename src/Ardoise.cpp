@@ -44,6 +44,8 @@ void Ardoise::ajouter(Forme* f)
 	if(unique)
 	{
 		formes.push_back(f);
+
+		commandes.insert(commandes.begin(), f->getSauvegarde());
 	}
 	else
 	{
