@@ -61,6 +61,9 @@ public:
     //
 
     virtual ~Ardoise ( );
+	const std::vector<Forme*>& getFormes() const;
+	void setFormes(const std::vector<Forme*>& formes);
+
     // Mode d'emploi :
     //
     // Contrat :

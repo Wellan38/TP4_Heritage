@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <cstdlib>
+#include <fstream>
 using namespace std;
 //commit test
 
@@ -195,18 +196,48 @@ int main()
 
 		else if(result[0].compare("LOAD")==0)
 		{
-			/*ifstream fichier(result[1], ios::in);  // on ouvre le fichier en lecture
+			string com;
+			Ardoise uneArdoise;
+			string a=result[1];
+			bool b =true;
+			ifstream fichier(a.c_str(), ios::in);  // on ouvre le fichier en lecture
 
 						if(fichier)  // si l'ouverture a réussi
 					    {
+							vector<Forme*> formeTemp;
+							while(getline(fichier, com))  // tant que l'on peut mettre la ligne dans "contenu"
+							{
+								ajouterForme(com,uneArdoise);
+							}
+							for(int i=0;i<undoLoad.size();i++)
+							{
+								if(lArdoise.rechercheParNom(uneArdoise.getFormes()[i]->getNom())!=NULL)
+								{
+									b=false;
+									break;
+								}
+							}
+							if(!b)
+							{
+								cout<<"ERR"<<endl;
+							}
+							else
+							{
+								for(int i=0;i<uneArdoise.getFormes().size();i++)
+								{
+									undoLoad.push_back(uneArdoise.getFormes()[i]->getNom());
+									lArdoise.ajouter(uneArdoise.getFormes()[i],true);
+								}
+
+							}
 						            // instructions
 						     fichier.close();  // on ferme le fichier
 
 					    }
 						else
 						{
-							cerr << "Impossible d'ouvrir le fichier !" << endl;
-						}*/
+							cout << "ERR" << endl;
+						}
 		}
 
 		else if(result[0].compare("SAVE")==0)

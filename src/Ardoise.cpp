@@ -229,7 +229,13 @@ Ardoise::~Ardoise ( )
 #endif
 } //----- Fin de ~Ardoise
 
+const std::vector<Forme*>& Ardoise::getFormes() const {
+	return formes;
+}
 
+void Ardoise::setFormes(const std::vector<Forme*>& formes) {
+	this->formes = formes;
+}
 //------------------------------------------------------------------ PRIVE
 
 //----------------------------------------------------- Méthodes protégées
