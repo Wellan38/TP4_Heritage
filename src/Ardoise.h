@@ -42,9 +42,9 @@ public:
 	 void vider();
 	 void sauvegarder(std::string nomFichier) const;
 	 Forme* rechercheParNom(const std::string& nom);
-	 string undo();
-	 string redo();
-	 void ajouterCommande(string commande);
+	 std::string undo();
+	 std::string redo();
+	 void ajouterCommande(std::string commande);
 
 
 //-------------------------------------------- Constructeurs - destructeur
