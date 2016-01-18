@@ -53,6 +53,11 @@ PolygoneConvexe* PolygoneConvexe::clone()
 
 }
 
+bool PolygoneConvexe::contient(int x, int y)
+{
+	return true;
+}
+
 
 //-------------------------------------------- Constructeurs - destructeur
 PolygoneConvexe::PolygoneConvexe ( const PolygoneConvexe & unPolygoneConvexe ):Forme::Forme(unPolygoneConvexe.nom,unPolygoneConvexe.sauvegarde,unPolygoneConvexe.type),points(unPolygoneConvexe.points)

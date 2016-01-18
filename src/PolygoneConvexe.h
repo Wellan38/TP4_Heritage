@@ -38,6 +38,7 @@ public:
 	virtual void  deplacer(int dx,int dy);
 	virtual void afficher();
 	virtual PolygoneConvexe* clone();
+	virtual bool contient(int x, int y);
 
 
 //-------------------------------------------- Constructeurs - destructeur

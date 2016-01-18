@@ -53,6 +53,34 @@ Segment* Segment::clone()
 	return new Segment (*this);
 }
 
+bool Segment::contient(int x, int y)
+{
+	// On commence par vérifier si tous les points sont alignés
+
+	double coeffDirAB = (pointB.getY() - pointA.getY()) / (pointB.getX() - pointA.getX());
+	double coeffDirAC = (y - pointA.getY()) / (x - pointA.getX());
+
+	double longueurAB = sqrt(pow(pointB.getY() - pointA.getY(), 2) + pow(pointB.getX() - pointA.getX(), 2));
+	double longueurAC = sqrt(pow(y - pointA.getY(), 2) + pow(x - pointA.getX(), 2));
+
+	if (abs(coeffDirAB) != abs(coeffDirAC))
+	{
+		return false; // Les points ne sont pas alignés, donc (x,y) n'appartient pas au segment
+	}
+	else if (coeffDirAB == - coeffDirAC)
+	{
+		return false;
+	}
+	else if (longueurAC > longueurAB)
+	{
+		return false; // (x,y) est sur la droite (AB), mais pas sur le segment
+	}
+	else
+	{
+		return true;
+	}
+}
+
 //-------------------------------------------- Constructeurs - destructeur
 Segment::Segment ( const Segment & unSegment ):Forme::Forme(unSegment.nom,unSegment.sauvegarde,unSegment.type),pointA(unSegment.pointA),pointB(unSegment.pointB)
 // Algorithme :

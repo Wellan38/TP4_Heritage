@@ -148,6 +148,38 @@ Forme* Ardoise::rechercheParNom(const string& nom)
 	}
 }
 
+std::string Ardoise::undo()
+{
+	if (!commandes.empty())
+	{
+		std::string com = *commandes.begin();
+		commandes.erase(commandes.begin());
+		commandesAnnulees.insert(commandesAnnulees.begin(), com);
+
+		return com;
+	}
+	else
+	{
+		return "";
+	}
+}
+
+std::string Ardoise::redo()
+{
+	if (!commandesAnnulees.empty())
+	{
+		std::string com = *commandesAnnulees.begin();
+		commandesAnnulees.erase(commandesAnnulees.begin());
+		commandes.insert(commandes.begin(), com);
+
+		return com;
+	}
+	else
+	{
+		return "";
+	}
+}
+
 //-------------------------------------------- Constructeurs - destructeur
 Ardoise::Ardoise ( const Ardoise & unArdoise )
 // Algorithme :

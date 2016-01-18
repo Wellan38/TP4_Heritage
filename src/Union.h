@@ -38,7 +38,7 @@ public:
 	virtual void  deplacer(int dx,int dy);
 	virtual void afficher();
 	virtual Union* clone();
-
+	virtual bool contient(int x, int y);
 
 //-------------------------------------------- Constructeurs - destructeur
     Union ( const Union & unUnion );

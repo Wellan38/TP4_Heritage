@@ -54,6 +54,19 @@ void Rectangle::afficher()
 {
 	return new Rectangle (*this);
 }
+
+bool Rectangle::contient(int x, int y)
+{
+	if (x >= pointA.getX() && x <= pointB.getX() && y >= pointB.getY() && y <= pointA.getY())
+ 	{
+ 		return true;
+ 	}
+ 	else
+ 	{
+ 		return false;
+	}
+}
+
 //-------------------------------------------- Constructeurs - destructeur
 Rectangle::Rectangle ( const Rectangle & unRectangle ):Forme::Forme(unRectangle.nom,unRectangle.sauvegarde,unRectangle.type),pointA(unRectangle.pointA),pointB(unRectangle.pointB)
 // Algorithme :

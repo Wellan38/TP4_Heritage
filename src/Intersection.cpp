@@ -56,7 +56,23 @@ void Intersection::deplacer(int dx,int dy)
 	}
 }
 
+bool Intersection::contient(int x, int y)
+{
+	if (formes.size() == 0)
+	{
+		return false;
+	}
 
+	for (vector<Forme*>::iterator it = formes.begin(); it != formes.end(); it++)
+	{
+		if (!((*it)->contient(x, y)))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
 
 
 //-------------------------------------------- Constructeurs - destructeur

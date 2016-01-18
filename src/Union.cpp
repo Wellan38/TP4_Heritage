@@ -59,7 +59,23 @@ void Union::deplacer(int dx,int dy)
 	}
 }
 
+bool Union::contient(int x, int y)
+{
+	if (formes.size() == 0)
+	{
+		return false;
+	}
 
+	for (vector<Forme*>::iterator it = formes.begin(); it != formes.end(); it++)
+	{
+		if ((*it)->contient(x, y))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
 
 
 //-------------------------------------------- Constructeurs - destructeur

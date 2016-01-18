@@ -34,8 +34,6 @@ void Forme::afficher()
 	//cout<<this->type<<endl;
 }
 
-
-
 //-------------------------------------------- Constructeurs - destructeur
 
 Forme::Forme ( const Forme & unForme )

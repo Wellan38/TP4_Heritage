@@ -42,7 +42,8 @@ public:
 	 void vider();
 	 void sauvegarder(std::string nomFichier) const;
 	 Forme* rechercheParNom(const std::string& nom);
-
+	 string undo();
+	 string redo();
 
 
 //-------------------------------------------- Constructeurs - destructeur
@@ -70,6 +71,8 @@ private:
 //------------------------------------------------------- Attributs privés
 std::vector<Forme*> formes;
 
+std::vector<std::string> commandes;
+std::vector<std::string> commandesAnnulees;
 
 };
 

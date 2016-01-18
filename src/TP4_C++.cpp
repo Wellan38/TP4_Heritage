@@ -264,7 +264,30 @@ int main()
 //------------------------------------------------------------------------------------------------------------------------------------
 		else if(result[0].compare("HIT")==0)
 		{
+			if (result.size() != 4)
+			{
+				cout << "ERR" << endl;
+			}
+			else
+			{
+				Forme* f = lArdoise.rechercheParNom(result[1]);
 
+				if (f == NULL)
+				{
+					cout << "ERR" << endl;
+				}
+				else
+				{
+					if (f->contient(stringToInt(result[2]), stringToInt(result[3])))
+					{
+						cout << "YES" << endl;
+					}
+					else
+					{
+						cout << "NO" << endl;
+					}
+				}
+			}
 		}
 //-----------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------Supprimer des formes---------------------------------------------------------------
@@ -333,12 +356,36 @@ int main()
 
 		else if(result[0].compare("LIST")==0)
 		{
-
+			lArdoise.afficher();
 		}
 
 		else if(result[0].compare("UNDO")==0)
 		{
+			string com = lArdoise.undo();
 
+			if (com.compare(""))
+			{
+				cout << "ERR" << endl;
+			}
+			else
+			{
+				vector<string> args;
+				Split(args, com, ' ');
+
+				if (args[0].compare("S") || args[0].compare("R") || args[0].compare("PC") || args[0].compare("OR") || args[0].compare("OI"))
+				{
+					Forme* f = lArdoise.rechercheParNom(args[1]);
+
+					if (f != NULL)
+					{
+						lArdoise.supprimer(f);
+					}
+					else
+					{
+						cout << "ERR" << endl;
+					}
+				}
+			}
 		}
 
 		else if(result[0].compare("REDO")==0)
@@ -348,7 +395,19 @@ int main()
 
 		else if(result[0].compare("LOAD")==0)
 		{
+			string com = lArdoise.undo();
 
+			if (com.compare(""))
+			{
+				cout << "ERR" << endl;
+			}
+			else
+			{
+				vector<string> args;
+				Split(args, com, ' ');
+
+
+			}
 		}
 
 		else if(result[0].compare("SAVE")==0)
@@ -358,7 +417,7 @@ int main()
 
 		else if(result[0].compare("CLEAR")==0)
 		{
-
+			lArdoise.vider();
 		}
 
 		else

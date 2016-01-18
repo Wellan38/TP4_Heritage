@@ -39,6 +39,8 @@ public:
 	virtual void  deplacer(int dx,int dy);
 	virtual void afficher();
 	virtual Rectangle* clone();
+	virtual bool contient(int x, int y);
+
 //-------------------------------------------- Constructeurs - destructeur
     Rectangle ( const Rectangle & unRectangle );
     // Mode d'emploi (constructeur de copie) :

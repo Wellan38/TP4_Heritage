@@ -11,6 +11,7 @@
 
 
 #include <string>
+#include <cmath>
 
 
 //--------------------------------------------------- Interfaces utilisées
@@ -35,7 +36,7 @@ public:
 //----------------------------------------------------- Méthodes publiques
 	virtual void  deplacer(int dx,int dy);
 	virtual Segment* clone();
-
+	virtual bool contient(int x, int y);
 	void afficher();
 //-------------------------------------------- Constructeurs - destructeur
     Segment ( const Segment & unSegment );

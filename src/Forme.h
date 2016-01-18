@@ -33,6 +33,7 @@ public:
 	virtual void  deplacer(int dx,int dy)=0;
 	virtual void afficher();
 	virtual Forme* clone()=0;
+	virtual bool contient(int x, int y)=0;
 
 //-------------------------------------------- Constructeurs - destructeur
 Forme ( const Forme & unForme );
