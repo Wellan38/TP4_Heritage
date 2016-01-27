@@ -12,7 +12,7 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
-
+#include <fstream>
 //------------------------------------------------------ Include personnel
 #include "Segment.h"
 
@@ -27,6 +27,21 @@ using namespace std;
 //-------------------------------------------------------- Fonctions amies
 
 //----------------------------------------------------- Méthodes publiques
+ void Segment::sauver(string nomfic)
+{
+	  ofstream fichier(nomfic.c_str(), ios::out | ios::app);
+
+	         if(fichier)  // si l'ouverture a réussi
+	         {
+	             // instructions
+	         		 fichier<<"S "<<nom<<" "<<pointA.getX()<<" "<<pointA.getY()<<" "<<pointB.getX()<<" "<<pointB.getY()<<endl;
+	                 fichier.close();  // on referme le fichier
+	         }
+	         else  // sinon
+	                 cerr << "Erreur à l'ouverture !" << endl;
+
+
+}
  void Segment::deplacer(int dx,int dy)
 // Algorithme :
 

@@ -12,7 +12,7 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
-
+#include <fstream>
 //------------------------------------------------------ Include personnel
 #include "Intersection.h"
 
@@ -28,7 +28,52 @@ using namespace std;
 //{
 //} //----- Fin de Méthode
 
+void Intersection::changerNom()
+{
+	string tempo;
 
+	for(int i=0;i<formes.size();i++)
+	{
+
+		tempo=formes[i]->getNom();
+		formes[i]->setNom(nom+"_"+tempo);
+
+	}
+}
+
+
+void Intersection::sauver(string nomfic)
+{
+	ofstream fichier(nomfic.c_str(), ios::out | ios::app);
+
+	 if(fichier)  // si l'ouverture a réussi
+
+	 {
+		 // instructions
+		 for(int i=0;i<formes.size();i++)
+		 {
+			 formes[i]->sauver(nomfic);
+		 }
+			 fichier<<"OI "<<nom;
+
+		 for(int i=0;i<formes.size();i++)
+		 {
+			fichier<<" "<<formes[i]->getNom();
+		 }
+
+		 fichier<<endl;
+		 fichier<<"DELETE";
+		 for(int i=0;i<formes.size();i++)
+		 {
+			fichier<<" "<<formes[i]->getNom();
+		 }
+
+		fichier<<endl;
+			 fichier.close();  // on referme le fichier
+	 }
+	 else  // sinon
+			 cerr << "Erreur à l'ouverture !" << endl;
+}
 Intersection* Intersection::clone()
 {
 	return new Intersection (*this);

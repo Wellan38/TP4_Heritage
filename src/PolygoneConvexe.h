@@ -39,6 +39,7 @@ public:
 	virtual void afficher();
 	virtual PolygoneConvexe* clone();
 	virtual bool contient(int x, int y);
+	virtual void sauver(string nomfic);
 
 
 //-------------------------------------------- Constructeurs - destructeur

@@ -39,7 +39,8 @@ public:
 	virtual void afficher();
 	virtual Union* clone();
 	virtual bool contient(int x, int y);
-
+	virtual void sauver(string nomfic);
+	void changerNom();
 //-------------------------------------------- Constructeurs - destructeur
     Union ( const Union & unUnion );
     // Mode d'emploi (constructeur de copie) :

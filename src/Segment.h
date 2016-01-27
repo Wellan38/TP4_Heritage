@@ -38,6 +38,7 @@ public:
 	virtual Segment* clone();
 	virtual bool contient(int x, int y);
 	void afficher();
+	virtual void sauver(string nomfic);
 //-------------------------------------------- Constructeurs - destructeur
     Segment ( const Segment & unSegment );
     // Mode d'emploi (constructeur de copie) :

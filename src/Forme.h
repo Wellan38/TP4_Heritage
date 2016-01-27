@@ -33,7 +33,9 @@ public:
 	virtual void  deplacer(int dx,int dy)=0;
 	virtual void afficher();
 	virtual Forme* clone()=0;
+	virtual void sauver(string nomfic)=0;//---------------27/01/16
 	virtual bool contient(int x, int y)=0;
+	virtual void changerNom();
 
 //-------------------------------------------- Constructeurs - destructeur
 Forme ( const Forme & unForme );

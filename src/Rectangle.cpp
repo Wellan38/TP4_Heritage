@@ -12,7 +12,7 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
-
+#include <fstream>
 //------------------------------------------------------ Include personnel
 #include "Rectangle.h"
 
@@ -39,6 +39,21 @@ void  Rectangle::deplacer(int dx,int dy)
 {
 	pointA.deplacer(dx,dy);
 	pointB.deplacer(dx,dy);
+}
+
+void Rectangle::sauver(string nomfic)
+{
+	ofstream fichier(nomfic.c_str(), ios::out | ios::app);
+
+	 if(fichier)  // si l'ouverture a réussi
+
+	 {
+		 // instructions
+			 fichier<<"R "<<nom<<" "<<pointA.getX()<<" "<<pointA.getY()<<" "<<pointB.getX()<<" "<<pointB.getY()<<endl;
+			 fichier.close();  // on referme le fichier
+	 }
+	 else  // sinon
+			 cerr << "Erreur à l'ouverture !" << endl;
 }
 void Rectangle::afficher()
 {

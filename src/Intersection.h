@@ -39,6 +39,8 @@ public:
 	virtual void afficher();
 	virtual Intersection* clone();
 	virtual bool contient(int x, int y);
+	virtual void sauver(string nomfic);
+	void changerNom();
 
 //-------------------------------------------- Constructeurs - destructeur
 	Intersection ( const Intersection & unIntersection );

@@ -12,7 +12,7 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
-
+#include <fstream>
 //------------------------------------------------------ Include personnel
 #include "Union.h"
 
@@ -33,14 +33,54 @@ Union* Union::clone()
 	return new Union (*this);
 }
 
+void Union::changerNom()
+{
+	string tempo;
+
+	for(int i=0;i<formes.size();i++)
+	{
+
+		tempo=formes[i]->getNom();
+		formes[i]->setNom(nom+"_"+tempo);
+
+	}
+}
+
+void Union::sauver(string nomfic)
+{
+	ofstream fichier(nomfic.c_str(), ios::out | ios::app);
+
+		 if(fichier)  // si l'ouverture a réussi
+
+		 {
+			 // instructions
+			 for(int i=0;i<formes.size();i++)
+			 {
+				 formes[i]->sauver(nomfic);
+			 }
+				 fichier<<"OR "<<nom;
+
+			 for(int i=0;i<formes.size();i++)
+			 {
+				fichier<<" "<<formes[i]->getNom();
+			 }
+
+			 fichier<<endl;
+			 fichier<<"DELETE";
+			 for(int i=0;i<formes.size();i++)
+			 {
+				fichier<<" "<<formes[i]->getNom();
+			 }
+
+			fichier<<endl;
+				 fichier.close();  // on referme le fichier
+		 }
+		 else  // sinon
+				 cerr << "Erreur à l'ouverture !" << endl;
+}
 void Union::afficher()
 {
-	/*Forme::afficher();
-	for(unsigned int i=0;i<formes.size();i++)
-	{
-		formes[i]->afficher();
-	}
-	cout<<endl;*/
+
 
 	cout<<"OR "<<this->nom;
 	for(unsigned int i=0;i<formes.size();i++)
@@ -48,6 +88,11 @@ void Union::afficher()
 			cout<<" "<<formes[i]->getNom();
 		}
 	cout<<endl;
+	for(unsigned int i=0;i<formes.size();i++)
+			{
+				formes[i]->afficher();
+			}
+
 
 }
 

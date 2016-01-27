@@ -27,6 +27,10 @@ using namespace std;
 //
 //{
 //} //----- Fin de Méthode
+void Forme::changerNom()
+{
+
+}
 void Forme::afficher()
 {
 	cout<<this->nom<<" ";

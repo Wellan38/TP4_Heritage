@@ -12,7 +12,7 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
-
+#include <fstream>
 //------------------------------------------------------ Include personnel
 #include "PolygoneConvexe.h"
 
@@ -38,7 +38,25 @@ void PolygoneConvexe::afficher()
 	}
 	cout<<endl;
 }
+void PolygoneConvexe::sauver(string nomfic)
+{
+	ofstream fichier(nomfic.c_str(), ios::out | ios::app);
 
+	 if(fichier)  // si l'ouverture a réussi
+
+	 {
+		 // instructions
+			 fichier<<"PC "<<nom;
+			 for(unsigned int i=0;i<points.size();i++)
+			 	{
+			 		fichier<<" "<<points[i].getX()<<" "<<points[i].getY();
+			 	}
+			 fichier<<endl;
+			 fichier.close();  // on referme le fichier
+	 }
+	 else  // sinon
+			 cerr << "Erreur à l'ouverture !" << endl;
+}
 void PolygoneConvexe::deplacer(int dx,int dy)
 {
 	for(unsigned int i=0;i<points.size();i++)

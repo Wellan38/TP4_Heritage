@@ -136,6 +136,7 @@ int main()
 				{
 					f->deplacer(stringToInt(result[2]),stringToInt(result[3]));
 					lArdoise.ajouterCommande("MOVE " + result[2] + " " + result[3]);
+					lArdoise.afficher();//---------------------------------------------------*****
 				}
 			}
 
@@ -242,7 +243,16 @@ int main()
 
 		else if(result[0].compare("SAVE")==0)
 		{
+			if(result.size()!=2)
+			{
+				cout<<"ERR"<<endl;
+			}
 
+			else
+			{
+				lArdoise.sauvegarder(result[1]);
+				cout<<"OK"<<endl;
+			}
 		}
 
 		else if(result[0].compare("CLEAR")==0)
@@ -486,10 +496,16 @@ void ajouterForme(string commande,Ardoise& uneArdoise)
 				vector<Forme*> z;
 				for(int i=2;i<resultLoad.size();i++)
 				{
-				  z.push_back(uneArdoise.rechercheParNom(resultLoad[i]));
+
+					z.push_back(uneArdoise.rechercheParNom(resultLoad[i]));
 
 				}
+				//-----------changement de nom-------------------
+
+
+
 				uneArdoise.ajouter(new Union(resultLoad[1],commande,uni,z), false);
+				uneArdoise.getFormes().back()->changerNom();
 				cout<<"OK"<<endl;
 				uneArdoise.afficher();
 			}
@@ -535,12 +551,9 @@ void ajouterForme(string commande,Ardoise& uneArdoise)
 							if(nomsExistent)
 							{
 								vector<Forme*> z;
-								for(int i=2;i<resultLoad.size();i++)
-								{
-									 z.push_back(uneArdoise.rechercheParNom(resultLoad[i]));
 
-								}
 								uneArdoise.ajouter(new Intersection(resultLoad[1],commande,inter,z), false);
+								uneArdoise.getFormes().back()->changerNom();
 								cout<<"OK"<<endl;
 							}
 							//-------------------------------------------------------------------------------------------

@@ -116,7 +116,7 @@ void Ardoise::enumerer() const
 void Ardoise::sauvegarder(string nomFichier) const
 {
 
-     ofstream fichier(nomFichier.c_str(), ios::out | ios::trunc);  //déclaration du flux et ouverture du fichier
+    /* ofstream fichier(nomFichier.c_str(), ios::out | ios::trunc);  //déclaration du flux et ouverture du fichier
 
         if(fichier)  // si l'ouverture a réussi
         {
@@ -128,7 +128,13 @@ void Ardoise::sauvegarder(string nomFichier) const
                 fichier.close();  // on referme le fichier
         }
         else  // sinon
-                cerr << "Erreur à l'ouverture !" << endl;
+                cerr << "Erreur à l'ouverture !" << endl;*/
+
+	//---------------------27/01/16-----------------------------------
+	for(int i=0;i<formes.size();i++)
+	{
+		formes[i]->sauver(nomFichier);
+	}
 
 
 
