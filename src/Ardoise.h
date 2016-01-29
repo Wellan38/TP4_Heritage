@@ -1,7 +1,7 @@
 /*************************************************************************
                            Ardoise  -  description
                              -------------------
-    début                : 12 janv. 2016
+    dï¿½but                : 12 janv. 2016
     copyright            : (C) 2016 par Laurent
 *************************************************************************/
 
@@ -9,7 +9,7 @@
 #if ! defined ( ARDOISE_H )
 #define ARDOISE_H
 
-//--------------------------------------------------- Interfaces utilisées
+//--------------------------------------------------- Interfaces utilisï¿½es
 #include "Forme.h"
 #include <vector>
 #include <string>
@@ -19,7 +19,7 @@
 //------------------------------------------------------------------ Types 
 
 //------------------------------------------------------------------------ 
-// Rôle de la classe <Ardoise>
+// Rï¿½le de la classe <Ardoise>
 //
 //
 //------------------------------------------------------------------------ 
@@ -29,8 +29,8 @@ class Ardoise
 //----------------------------------------------------------------- PUBLIC
 
 public:
-//----------------------------------------------------- Méthodes publiques
-    // type Méthode ( liste de paramètres );
+//----------------------------------------------------- Mï¿½thodes publiques
+    // type Mï¿½thode ( liste de paramï¿½tres );
     // Mode d'emploi :
     //
     // Contrat :
@@ -45,6 +45,7 @@ public:
 	 std::string undo();
 	 std::string redo();
 	 void ajouterCommande(std::string commande);
+	 void afficherCommandes();
 
 
 //-------------------------------------------- Constructeurs - destructeur
@@ -72,14 +73,16 @@ public:
 //------------------------------------------------------------------ PRIVE 
 
 private:
-//------------------------------------------------------- Attributs privés
+//------------------------------------------------------- Attributs privï¿½s
 std::vector<Forme*> formes;
 
 std::vector<std::string> commandes;
 std::vector<std::string> commandesAnnulees;
 
+//--------------------------------------------------------MÃ©thodes privÃ©es
+
 };
 
-//----------------------------------------- Types dépendants de <Ardoise>
+//----------------------------------------- Types dï¿½pendants de <Ardoise>
 
 #endif // ARDOISE_H

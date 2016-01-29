@@ -179,12 +179,40 @@ int main()
 
 					if (f == NULL)
 					{
-						//ajouterForme(args[3], lArdoise, false);
+						for (int i = 1; i <= 2; i++)
+						{
+							args.erase(args.begin());
+						}
+
+						cout << "Commande: ";
+
+						for (int i = 0; i < args.size(); i++)
+						{
+							cout << args[i] << " ";
+						}
+
+						cout << endl;
+
+						com = "";
+
+						for (vector<string>::iterator it = args.begin(); it != args.end(); it++)
+						{
+							if (it < args.end() - 1)
+							{
+								com += *it + " ";
+							}
+							else
+							{
+								com += *it;
+							}
+						}
+
+						ajouterForme(com, lArdoise, false);
 					}
 					else
 					{
 						cout << "ERR" << endl;
-						cout << "# La forme " + f->getNom() + " existe déjà." << endl;
+						cout << "# La forme " + f->getNom() + " existe dï¿½jï¿½." << endl;
 					}
 				}
 			}
@@ -192,7 +220,50 @@ int main()
 
 		else if(result[0].compare("REDO")==0)
 		{
+			string com = lArdoise.redo();
 
+			if (com.compare("") == 0)
+			{
+				cout << "ERR" << endl;
+			}
+			else
+			{
+				vector<string> args;
+				Split(args, com, ' ');
+
+				if (args[0].compare("S") == 0 || args[0].compare("R") == 0 || args[0].compare("PC") == 0 || args[0].compare("OR") == 0 || args[0].compare("OI") == 0)
+				{
+					Forme* f = lArdoise.rechercheParNom(args[1]);
+
+					if (f == NULL)
+					{
+						ajouterForme(com, lArdoise, false);
+					}
+					else
+					{
+						cout << "ERR" << endl;
+						cout << "# La forme " + f->getNom() + " existe dï¿½jï¿½." << endl;
+					}
+				}
+				else if (args[0].compare("DELETE") == 0)
+				{
+					Forme* f = lArdoise.rechercheParNom(args[1]);
+
+					if (f != NULL)
+					{
+						lArdoise.supprimer(f);
+					}
+					else
+					{
+						cout << "ERR" << endl;
+					}
+				}
+			}
+		}
+
+		else if (result[0].compare("LISTUNDO") == 0)
+		{
+			lArdoise.afficherCommandes();
 		}
 
 		else if(result[0].compare("LOAD")==0)
@@ -203,7 +274,7 @@ int main()
 			bool b =true;
 			ifstream fichier(a.c_str(), ios::in);  // on ouvre le fichier en lecture
 
-						if(fichier)  // si l'ouverture a réussi
+						if(fichier)  // si l'ouverture a rï¿½ussi
 					    {
 							vector<Forme*> formeTemp;
 							while(getline(fichier, com))  // tant que l'on peut mettre la ligne dans "contenu"
@@ -318,7 +389,7 @@ bool estConvexe(const vector<Point> &lesPoints)
 
 bool nbPairCoordonnees(int debut,int fin)
 {
-	if((fin-debut)%2!=0)//--------------si le nombre de coordonnées de ppints n'est pas pair
+	if((fin-debut)%2!=0)//--------------si le nombre de coordonnï¿½es de ppints n'est pas pair
 	{
 		return false;
 	}
@@ -362,7 +433,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
 	if(resultLoad[0].compare("S")==0)
 	{
 
-		if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas déjà
+		if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas dï¿½jï¿½
 		{
 			if(resultLoad.size()!=6)//--------------- Si il n'y a pas au moins 6 arguments dans la commande
 			{
@@ -388,7 +459,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
 	else if(resultLoad[0].compare("R")==0)
 			{
 
-				if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas déjà
+				if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas dï¿½jï¿½
 				{
 
 
@@ -400,7 +471,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
 	                //--------------------------------------------------------------------
 						else
 						{
-							//------------Si le premier point n'est pas celui en haut à gauche -------------------------------
+							//------------Si le premier point n'est pas celui en haut ï¿½ gauche -------------------------------
 							if((stringToInt(resultLoad[5])>=stringToInt(resultLoad[3]))|| (stringToInt(resultLoad[2])>=stringToInt(resultLoad[4])))
 
 							{
@@ -425,13 +496,13 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
 	else if(resultLoad[0].compare("PC")==0)
 			{
 
-				if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas déjà
+				if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas dï¿½jï¿½
 				{
 					if(resultLoad.size()<8)//---------si il n'y a pas assez d'arguments--------------
 					{
 						cout<<"ERR"<<endl;
 					}
-					else if(!nbPairCoordonnees(2,resultLoad.size()))//--------------si le nombre de coordonnées de ppints n'est pas pair
+					else if(!nbPairCoordonnees(2,resultLoad.size()))//--------------si le nombre de coordonnï¿½es de ppints n'est pas pair
 					{
 						cout<<"ERR"<<endl;
 
@@ -471,7 +542,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
 	else if(resultLoad[0].compare("OR")==0)
 	{
 
-	if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas déjà
+	if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas dï¿½jï¿½
 	{
 		if(resultLoad.size()<4)//--------------------si il n'y a pas assez d'arguments--------------
 		{
@@ -534,7 +605,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
 			else if(resultLoad[0].compare("OI")==0)
 			{
 
-				if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas déjà
+				if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas dï¿½jï¿½
 				{
 						if(resultLoad.size()<4)//---------------si il n'y a pas assez d'arguments--------------
 						{

@@ -1,15 +1,15 @@
 /*************************************************************************
                            Ardoise  -  description
                              -------------------
-    début                : 12 janv. 2016
+    dï¿½but                : 12 janv. 2016
     copyright            : (C) 2016 par Laurent
 *************************************************************************/
 
-//---------- Réalisation de la classe <Ardoise> (fichier Ardoise.cpp) --
+//---------- Rï¿½alisation de la classe <Ardoise> (fichier Ardoise.cpp) --
 
 //---------------------------------------------------------------- INCLUDE
 
-//-------------------------------------------------------- Include système
+//-------------------------------------------------------- Include systï¿½me
 using namespace std;
 #include <iostream>
 
@@ -21,12 +21,12 @@ using namespace std;
 
 //----------------------------------------------------------------- PUBLIC
 
-//----------------------------------------------------- Méthodes publiques
-// type Ardoise::Méthode ( liste de paramètres )
+//----------------------------------------------------- Mï¿½thodes publiques
+// type Ardoise::Mï¿½thode ( liste de paramï¿½tres )
 // Algorithme :
 //
 //{
-//} //----- Fin de Méthode
+//} //----- Fin de Mï¿½thode
 
 void Ardoise::ajouter(Forme* f, bool load)
 {
@@ -52,13 +52,13 @@ void Ardoise::ajouter(Forme* f, bool load)
 	}
 	else
 	{
-		cout<<"Une forme du même nom existe déjà"<<endl;
+		cout<<"Une forme du mï¿½me nom existe dï¿½jï¿½"<<endl;
 	}
 }
 
 void Ardoise::vider()
 {
-	//TODO Ajouter la sauvegarde du modèle actuel dans un fichier "SauvegardePourClear.txt"
+	//TODO Ajouter la sauvegarde du modï¿½le actuel dans un fichier "SauvegardePourClear.txt"
 
 	for(int i=0;i<formes.size();i++)
 	{
@@ -68,15 +68,16 @@ void Ardoise::vider()
 
 	commandes.insert(commandes.begin(), "CLEAR");
 }
+
 void Ardoise::supprimer(Forme* f)
 {
 	int i=0;
-	while((f->getNom().compare(formes[i]->getNom())))
+	while(f->getNom().compare(formes[i]->getNom()) != 0)
 	{
 		i++;
 	}
 
-	ajouterCommande("DELETE " + formes[i]->getNom() + formes[i]->getSauvegarde());
+	ajouterCommande("DELETE " + formes[i]->getNom() + " " + formes[i]->getSauvegarde());
 
 	delete formes[i];
 	formes.erase(formes.begin()+i);
@@ -105,7 +106,7 @@ void Ardoise::enumerer() const
 		{
 			for(int i=0;i<formes.size();i++)
 			{
-				cout<<"forme n°"<<i<<" "<<formes[i]->getSauvegarde()<<endl;
+				cout<<"forme nï¿½"<<i<<" "<<formes[i]->getSauvegarde()<<endl;
 			}
 		}
 		else
@@ -116,9 +117,9 @@ void Ardoise::enumerer() const
 void Ardoise::sauvegarder(string nomFichier) const
 {
 
-    /* ofstream fichier(nomFichier.c_str(), ios::out | ios::trunc);  //déclaration du flux et ouverture du fichier
+    /* ofstream fichier(nomFichier.c_str(), ios::out | ios::trunc);  //dï¿½claration du flux et ouverture du fichier
 
-        if(fichier)  // si l'ouverture a réussi
+        if(fichier)  // si l'ouverture a rï¿½ussi
         {
             // instructions
         		for(int i=0;i<formes.size();i++)
@@ -128,7 +129,7 @@ void Ardoise::sauvegarder(string nomFichier) const
                 fichier.close();  // on referme le fichier
         }
         else  // sinon
-                cerr << "Erreur à l'ouverture !" << endl;*/
+                cerr << "Erreur ï¿½ l'ouverture !" << endl;*/
 
 	//---------------------27/01/16-----------------------------------
 	for(int i=0;i<formes.size();i++)
@@ -154,16 +155,19 @@ Forme* Ardoise::rechercheParNom(const string& nom)
 		}
 		if(i<formes.size())
 		{
-		   return formes[i];
+			cout << "Forme trouvÃ©e" << endl;
+			return formes[i];
 		}
 
 		else
 		{
+			cout << "Forme non trouvÃ©e" << endl;
 			return NULL;
 		}
 	}
 	else
 	{
+		cout << "Liste vide" << endl;
 		return NULL;
 	}
 }
@@ -205,6 +209,14 @@ void Ardoise::ajouterCommande (string commande)
 	commandes.insert(commandes.begin(), commande);
 }
 
+void Ardoise::afficherCommandes()
+{
+	for (vector<string>::iterator it = commandes.begin(); it != commandes.end(); it++)
+	{
+		cout << *it << endl;
+	}
+}
+
 //-------------------------------------------- Constructeurs - destructeur
 Ardoise::Ardoise ( const Ardoise & unArdoise )
 // Algorithme :
@@ -244,6 +256,6 @@ void Ardoise::setFormes(const std::vector<Forme*>& formes) {
 }
 //------------------------------------------------------------------ PRIVE
 
-//----------------------------------------------------- Méthodes protégées
+//----------------------------------------------------- Mï¿½thodes protï¿½gï¿½es
 
-//------------------------------------------------------- Méthodes privées
+//------------------------------------------------------- Mï¿½thodes privï¿½es
