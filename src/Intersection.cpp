@@ -80,17 +80,18 @@ Intersection* Intersection::clone()
 }
 void Intersection::afficher()
 {
-	/*Forme::afficher();
-	for(unsigned int i=0;i<formes.size();i++)
-	{
-		formes[i]->afficher();
-	}*/
+
+	cout<<formes.size()<<endl;
 	cout<<"OI "<<this->nom;
 		for(unsigned int i=0;i<formes.size();i++)
 			{
 				cout<<" "<<formes[i]->getNom();
 			}
 		cout<<endl;
+		for(unsigned int i=0;i<formes.size();i++)
+				{
+					formes[i]->afficher();
+				}
 }
 
 void Intersection::deplacer(int dx,int dy)
@@ -121,7 +122,7 @@ bool Intersection::contient(int x, int y)
 
 
 //-------------------------------------------- Constructeurs - destructeur
-Intersection::Intersection ( const Intersection & unIntersection ):Forme::Forme(unIntersection.nom,unIntersection.sauvegarde,unIntersection.type),formes(unIntersection.formes)
+Intersection::Intersection ( const Intersection & unIntersection ):Forme::Forme(unIntersection.nom,unIntersection.sauvegarde,unIntersection.type)
 // Algorithme :
 //
 {
@@ -144,9 +145,9 @@ Intersection::Intersection ( const std::string& unNom,const std::string& uneSauv
 			formes.push_back(lesFormes[i]->clone());
 		}
 #ifdef MAP
-    cout << "Appel au constructeur de <Union>" << endl;
+    cout << "Appel au constructeur de <Intersection>" << endl;
 #endif
-} //----- Fin de Union
+} //----- Fin de Intersection
 
 
 Intersection::~Intersection ( )

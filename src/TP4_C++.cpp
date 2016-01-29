@@ -29,7 +29,7 @@ int Split(vector<string>& vecteur, string chaine, char separateur);
 int stringToInt(string s);
 bool estConvexe(const vector<Point> &lesPoints);
 bool nbPairCoordonnees(int debut,int fin);
-void ajouterForme(string commande,Ardoise& uneArdoise);
+void ajouterForme(string commande,Ardoise& uneArdoise,bool Load);
 
 int main()
 {
@@ -46,7 +46,7 @@ int main()
 		getline( cin, commande );
 		Split(result, commande,' ');
 
-		ajouterForme(commande,lArdoise);
+		ajouterForme(commande,lArdoise,false);
 
 
 		if(result[0].compare("HIT")==0)
@@ -208,7 +208,7 @@ int main()
 							vector<Forme*> formeTemp;
 							while(getline(fichier, com))  // tant que l'on peut mettre la ligne dans "contenu"
 							{
-								ajouterForme(com,uneArdoise);
+								ajouterForme(com,uneArdoise,true);
 							}
 							for(int i=0;i<undoLoad.size();i++)
 							{
@@ -355,7 +355,7 @@ int Split(vector<string>& vecteur, string chaine, char separateur)
 
 //---------------------Ajouter forme--------------------------------------------------------------------------------------------
 
-void ajouterForme(string commande,Ardoise& uneArdoise)
+void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
 {
 	vector<string> resultLoad;
 	Split(resultLoad, commande,' ');
@@ -505,7 +505,11 @@ void ajouterForme(string commande,Ardoise& uneArdoise)
 
 
 				uneArdoise.ajouter(new Union(resultLoad[1],commande,uni,z), false);
-				uneArdoise.getFormes().back()->changerNom();
+
+				if(!Load)
+				{
+					uneArdoise.getFormes().back()->changerNom();
+				}
 				cout<<"OK"<<endl;
 				uneArdoise.afficher();
 			}
@@ -548,13 +552,25 @@ void ajouterForme(string commande,Ardoise& uneArdoise)
 								}
 							}
 
+
+
 							if(nomsExistent)
 							{
 								vector<Forme*> z;
+								for(int i=2;i<resultLoad.size();i++)
+								{
+
+									z.push_back(uneArdoise.rechercheParNom(resultLoad[i]));
+
+								}
 
 								uneArdoise.ajouter(new Intersection(resultLoad[1],commande,inter,z), false);
-								uneArdoise.getFormes().back()->changerNom();
+								if(!Load)
+								{
+									uneArdoise.getFormes().back()->changerNom();
+								}
 								cout<<"OK"<<endl;
+								uneArdoise.afficher();
 							}
 							//-------------------------------------------------------------------------------------------
 							else

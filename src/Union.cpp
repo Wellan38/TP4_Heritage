@@ -124,7 +124,7 @@ bool Union::contient(int x, int y)
 
 
 //-------------------------------------------- Constructeurs - destructeur
-Union::Union ( const Union & unUnion ):Forme::Forme(unUnion.nom,unUnion.sauvegarde,unUnion.type),formes(unUnion.formes)
+Union::Union ( const Union & unUnion ):Forme::Forme(unUnion.nom,unUnion.sauvegarde,unUnion.type)
 // Algorithme :
 //
 {
