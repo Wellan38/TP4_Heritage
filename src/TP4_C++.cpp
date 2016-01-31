@@ -343,7 +343,7 @@ int main()
 
 	}while((commande.compare("EXIT"))!=0);
 
-	lArdoise.vider();
+	//lArdoise.vider();
 	return 0;
 
 }

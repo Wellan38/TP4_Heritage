@@ -74,16 +74,27 @@ PolygoneConvexe* PolygoneConvexe::clone()
 bool PolygoneConvexe::contient(int x, int y)
 {
 
-
-	  for(int i=0;i<points.size();i++)
+	float dPrec;
+	float d;
+	for(int i=0;i<points.size();i++)
 	  {
 	     Point A = points[i];
-	     float d;
+
 	     if (i==points.size()-1)
 	     {// si c'est le dernier point, on relie au premier
 	        Point B = points[0];
 	        Point VectA(B.getX() - A.getX(),B.getY() - A.getY());
 	        Point VectB(x - A.getX(),y - A.getY());
+
+	        if(i==0)
+	        {
+	        	dPrec=VectA.getX()*VectB.getY() - VectA.getY()*VectB.getX();
+	        }
+	        else
+	        {
+	        	dPrec=d;
+	        }
+
 	        d = VectA.getX()*VectB.getY() - VectA.getY()*VectB.getX();
 	     }
 	     else
@@ -91,10 +102,19 @@ bool PolygoneConvexe::contient(int x, int y)
 	        Point B = points[i+1];
 	        Point VectA(B.getX() - A.getX(),B.getY() - A.getY());
 	        Point VectB(x - A.getX(),y - A.getY());
+
+	        if(i==0)
+			{
+				dPrec=VectA.getX()*VectB.getY() - VectA.getY()*VectB.getX();
+			}
+			else
+			{
+				dPrec=d;
+			}
 	        d = VectA.getX()*VectB.getY() - VectA.getY()*VectB.getX();
 	     }
 
-	     if (d>0)
+	     if (d*dPrec<0)
 	        return false;  // un point à gauche et on arrête tout.
 	  }
 	  return true;  // si on sort du for, c'est qu'aucun point n'est à droite, donc c'est bon.

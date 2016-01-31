@@ -242,6 +242,7 @@ Ardoise::~Ardoise ( )
 // Algorithme :
 //
 {
+	this->vider();
 #ifdef MAP
     cout << "Appel au destructeur de <Ardoise>" << endl;
 #endif
