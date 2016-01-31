@@ -78,7 +78,7 @@ int main()
 		}
 //-----------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------Supprimer des formes---------------------------------------------------------------
-		else if(result[0].compare("DELETE")==0)
+		/*else if(result[0].compare("DELETE")==0)
 		{
 
 			//----------------------On verifie qu'il y ait suffisamment d'arguments-------------------------------------------------
@@ -114,7 +114,7 @@ int main()
 						cout<<"ERR"<<endl;
 					}
 			}
-		}
+		}*/
 //--------------------------------------------------Deplacer les formes-------------------------------------------------
 		else if(result[0].compare("MOVE")==0)
 		{
@@ -333,7 +333,7 @@ int main()
 
 		else
 		{
-			if((commande.compare("EXIT")!=0)&&(result[0].compare("S"))&&(result[0].compare("R"))&&(result[0].compare("PC"))&&(result[0].compare("OR"))&&(result[0].compare("OI")))
+			if((commande.compare("EXIT")!=0)&&(result[0].compare("S"))&&(result[0].compare("R"))&&(result[0].compare("DELETE"))&&(result[0].compare("PC"))&&(result[0].compare("OR"))&&(result[0].compare("OI")))
 			{
 				cout<<"ERR"<<endl;
 			}
@@ -542,64 +542,104 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
 	else if(resultLoad[0].compare("OR")==0)
 	{
 
-	if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas d�j�
-	{
-		if(resultLoad.size()<4)//--------------------si il n'y a pas assez d'arguments--------------
+		if(uneArdoise.rechercheParNom(resultLoad[1])==NULL)//--------Si le nom n'existe pas d�j�
 		{
-			cout<<"ERR"<<endl;
-		}
-
-		//-----------------Si les noms n'existent pas-----------------------------
-		else
-		{
-
-			bool nomsExistent=true;
-			for(int i=2;i<resultLoad.size();i++)
-			{
-				if(uneArdoise.rechercheParNom(resultLoad[i])==NULL)
-				{
-					nomsExistent=false;
-				}
-			}
-
-			if(nomsExistent)
-			{
-				vector<Forme*> z;
-				for(int i=2;i<resultLoad.size();i++)
-				{
-
-					z.push_back(uneArdoise.rechercheParNom(resultLoad[i]));
-
-				}
-				//-----------changement de nom-------------------
-
-
-
-				uneArdoise.ajouter(new Union(resultLoad[1],commande,uni,z), false);
-
-				if(!Load)
-				{
-					uneArdoise.getFormes().back()->changerNom();
-				}
-				cout<<"OK"<<endl;
-				uneArdoise.afficher();
-			}
-
-			//-------------------------------------------------------------------------
-			else
+			if(resultLoad.size()<4)//--------------------si il n'y a pas assez d'arguments--------------
 			{
 				cout<<"ERR"<<endl;
 			}
+
+			//-----------------Si les noms n'existent pas-----------------------------
+			else
+			{
+
+				bool nomsExistent=true;
+				for(int i=2;i<resultLoad.size();i++)
+				{
+					if(uneArdoise.rechercheParNom(resultLoad[i])==NULL)
+					{
+						nomsExistent=false;
+					}
+				}
+
+				if(nomsExistent)
+				{
+					vector<Forme*> z;
+					for(int i=2;i<resultLoad.size();i++)
+					{
+
+						z.push_back(uneArdoise.rechercheParNom(resultLoad[i]));
+
+					}
+					//-----------changement de nom-------------------
+
+
+
+					uneArdoise.ajouter(new Union(resultLoad[1],commande,uni,z), false);
+
+					if(!Load)
+					{
+						uneArdoise.getFormes().back()->changerNom();
+					}
+					cout<<"OK"<<endl;
+					uneArdoise.afficher();
+				}
+
+				//-------------------------------------------------------------------------
+				else
+				{
+					cout<<"ERR"<<endl;
+				}
+			}
 		}
 	}
 
-	else
+	else if(resultLoad[0].compare("DELETE")==0)
 	{
-		cout<<"ERR"<<endl;
+
+		//----------------------On verifie qu'il y ait suffisamment d'arguments-------------------------------------------------
+		if(resultLoad.size()<2)
+		{
+			cout<<"ERR"<<endl;
+		}
+		else
+		{
+				//----------------On regarde si tous les noms existent------------------------------------------------------------------
+				bool nomsExistent=true;
+				for(int i=1;i<resultLoad.size();i++)
+				{
+					if(uneArdoise.rechercheParNom(resultLoad[i])==NULL)
+					{
+						nomsExistent=false;
+					}
+				}
+				//---------------------------------------------------------------------------------
+				//----------------------------Supprimer les formes---------------------------------
+				Forme* f;
+				if(nomsExistent)
+				{
+					for(int i=1;i<resultLoad.size();i++)
+					{
+						f=uneArdoise.rechercheParNom(resultLoad[i]);
+						uneArdoise.supprimer(f);
+					}
+					cout<<"OK"<<endl;
+				}
+				//----------------------------------------------------------------------------------
+				else
+				{
+					cout<<"ERR"<<endl;
+				}
+		}
+
+
 	}
 
 
-}
+
+
+
+
 	//--------------------------------------------------------------------------------------------------------------------------
 	//----------------------------------------------------------------------Intersection----------------------------------------
 			else if(resultLoad[0].compare("OI")==0)
