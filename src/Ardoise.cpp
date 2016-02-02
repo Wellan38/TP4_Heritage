@@ -49,10 +49,10 @@ void Ardoise::ajouter(Forme* f, bool load)
 		{
 			ajouterCommande(f->getSauvegarde());
 		}
-	}
-	else
-	{
-		cout<<"Une forme du m�me nom existe d�j�"<<endl;
+		else
+		{
+			cout<<"# Une forme du m�me nom existe d�j�"<<endl;
+		}
 	}
 }
 
@@ -60,11 +60,12 @@ void Ardoise::vider()
 {
 	//TODO Ajouter la sauvegarde du mod�le actuel dans un fichier "SauvegardePourClear.txt"
 
-	for(int i=0;i<formes.size();i++)
+	while (!formes.empty())
 	{
-		delete formes[i];
+		delete formes[0];
+
+		formes.erase(formes.begin());
 	}
-	formes.clear();
 
 	commandes.insert(commandes.begin(), "CLEAR");
 }
@@ -96,7 +97,7 @@ void Ardoise::afficher() const//------------------------------------------------
 	}
 	else
 	{
-		cout<<"L'ardoise est vide"<<endl;
+		cout<<"# L'ardoise est vide"<<endl;
 	}
 
 }
@@ -111,7 +112,7 @@ void Ardoise::enumerer() const
 		}
 		else
 		{
-			cout<<"L'ardoise est vide"<<endl;
+			cout<<"# L'ardoise est vide"<<endl;
 		}
 }
 void Ardoise::sauvegarder(string nomFichier) const
@@ -242,7 +243,11 @@ Ardoise::~Ardoise ( )
 // Algorithme :
 //
 {
-	this->vider();
+	while (!formes.empty())
+	{
+		formes.erase(formes.begin());
+	}
+
 #ifdef MAP
     cout << "Appel au destructeur de <Ardoise>" << endl;
 #endif
