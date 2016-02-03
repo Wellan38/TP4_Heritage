@@ -45,8 +45,9 @@ public:
 	 std::string undo();
 	 std::string redo();
 	 void ajouterCommande(std::string commande);
+	 void ajouterCommandeAnnulee(std::string commande);//02/02
 	 void afficherCommandes();
-
+	 void afficherCommandesAnnulees();
 
 //-------------------------------------------- Constructeurs - destructeur
     Ardoise ( const Ardoise & unArdoise );
@@ -77,7 +78,7 @@ private:
 std::vector<Forme*> formes;
 
 std::vector<std::string> commandes;
-std::vector<std::string> commandesAnnulees;
+std::string commandesAnnulees;
 
 //--------------------------------------------------------Méthodes privées
 

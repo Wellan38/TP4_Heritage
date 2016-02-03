@@ -39,7 +39,7 @@ public:
 	virtual void afficher();
 	virtual Union* clone();
 	virtual bool contient(int x, int y);
-	virtual void sauver(string nomfic);
+	virtual void sauver(std::string nomfic);
 	void changerNom();
 //-------------------------------------------- Constructeurs - destructeur
     Union ( const Union & unUnion );

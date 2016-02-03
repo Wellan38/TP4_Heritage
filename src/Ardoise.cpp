@@ -45,15 +45,16 @@ void Ardoise::ajouter(Forme* f, bool load)
 	{
 		formes.push_back(f);
 
-		if (!load)
+		/*if (!load)
 		{
 			ajouterCommande(f->getSauvegarde());
-		}
-		else
-		{
-			cout<<"# Une forme du m�me nom existe d�j�"<<endl;
-		}
+		}*/
 	}
+	else
+	{
+		cout<<"# Une forme du m�me nom existe d�j�"<<endl;
+	}
+
 }
 
 void Ardoise::vider()
@@ -78,9 +79,9 @@ void Ardoise::supprimer(Forme* f)
 		i++;
 	}
 
-	ajouterCommande("DELETE " + formes[i]->getNom() + " " + formes[i]->getSauvegarde());
+	//ajouterCommande("DELETE " + formes[i]->getNom() + " " + formes[i]->getSauvegarde());
 
-	delete formes[i];
+	//delete formes[i]; 02/02
 	formes.erase(formes.begin()+i);
 
 
@@ -179,7 +180,7 @@ std::string Ardoise::undo()
 	{
 		std::string com = *commandes.begin();
 		commandes.erase(commandes.begin());
-		commandesAnnulees.insert(commandesAnnulees.begin(), com);
+		commandesAnnulees= com;
 
 		return com;
 	}
@@ -191,10 +192,10 @@ std::string Ardoise::undo()
 
 std::string Ardoise::redo()
 {
-	if (!commandesAnnulees.empty())
+	if (commandesAnnulees.compare("")!=0)
 	{
-		std::string com = *commandesAnnulees.begin();
-		commandesAnnulees.erase(commandesAnnulees.begin());
+		std::string com = commandesAnnulees;
+		commandesAnnulees="";
 		ajouterCommande(com);
 
 		return com;
@@ -209,13 +210,25 @@ void Ardoise::ajouterCommande (string commande)
 {
 	commandes.insert(commandes.begin(), commande);
 }
-
+//----------02/02-------------------
+void Ardoise::ajouterCommandeAnnulee (string commande)
+{
+	commandesAnnulees=commande;
+}
+//-----------------------------------
 void Ardoise::afficherCommandes()
 {
 	for (vector<string>::iterator it = commandes.begin(); it != commandes.end(); it++)
 	{
 		cout << *it << endl;
 	}
+}
+
+void Ardoise::afficherCommandesAnnulees()
+{
+
+		cout << this->commandesAnnulees << endl;
+
 }
 
 //-------------------------------------------- Constructeurs - destructeur
@@ -233,6 +246,7 @@ Ardoise::Ardoise ( )
 // Algorithme :
 //
 {
+	commandesAnnulees="";
 #ifdef MAP
     cout << "Appel au constructeur de <Ardoise>" << endl;
 #endif

@@ -40,7 +40,7 @@ public:
 	virtual void afficher();
 	virtual Rectangle* clone();
 	virtual bool contient(int x, int y);
-	virtual void sauver(string nomfic);
+	virtual void sauver(std::string nomfic);
 
 //-------------------------------------------- Constructeurs - destructeur
     Rectangle ( const Rectangle & unRectangle );

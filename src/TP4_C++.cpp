@@ -12,6 +12,7 @@
 #include <string.h>
 #include <cstdlib>
 #include <fstream>
+#include<sstream>
 using namespace std;
 //commit test
 
@@ -29,16 +30,22 @@ int Split(vector<string>& vecteur, string chaine, char separateur);
 int stringToInt(string s);
 bool estConvexe(const vector<Point> &lesPoints);
 bool nbPairCoordonnees(int debut,int fin);
-void ajouterForme(string commande,Ardoise& uneArdoise,bool Load);
+void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& undoDelete);
+string itos(int i);
 
+bool derniereCommandeUndo=false;
 int main()
 {
 
 	Ardoise lArdoise;
 	string commande;
 	vector<string> result;
-
+	vector<Forme*> undoDelete;
+	vector<Forme*> undoClear;
 	vector<string> undoLoad;
+	vector<Forme*> redoLoad;
+	vector<string> redoClear;
+
 
 	do
 	{
@@ -46,7 +53,7 @@ int main()
 		getline( cin, commande );
 		Split(result, commande,' ');
 
-		ajouterForme(commande,lArdoise,false);
+		ajouterForme(commande,lArdoise,false,undoDelete);
 
 
 		if(result[0].compare("HIT")==0)
@@ -77,52 +84,7 @@ int main()
 			}
 		}
 
-		else if(result[0].compare("DELETE")==0)
-			{
 
-				//----------------------On verifie qu'il y ait suffisamment d'arguments-------------------------------------------------
-				if(result.size()<2)
-				{
-					cout<<"ERR"<<endl;
-				}
-				else
-				{
-						//----------------On regarde si tous les noms existent------------------------------------------------------------------
-						bool nomsExistent=true;
-						for(int i=1;i<result.size();i++)
-						{
-							if(lArdoise.rechercheParNom(result[i])==NULL)
-							{
-								nomsExistent=false;
-							}
-						}
-						//---------------------------------------------------------------------------------
-						//----------------------------Supprimer les formes---------------------------------
-						Forme* f;
-						if(nomsExistent)
-						{
-							string com = "DELETE";
-
-							for(int i=1;i<result.size();i++)
-							{
-								f=lArdoise.rechercheParNom(result[i]);
-								lArdoise.supprimer(f);
-
-								com += " " + result[i];
-							}
-							cout<<"OK"<<endl;
-
-							lArdoise.ajouterCommande(com);
-						}
-						//----------------------------------------------------------------------------------
-						else
-						{
-							cout<<"ERR"<<endl;
-						}
-				}
-
-
-			}
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------Deplacer les formes-------------------------------------------------
@@ -145,8 +107,10 @@ int main()
 				else
 				{
 					f->deplacer(stringToInt(result[2]),stringToInt(result[3]));
-					lArdoise.ajouterCommande("MOVE " + result[1] + " " + result[2] + " " + result[3]);
+					//lArdoise.ajouterCommande("MOVE " + result[1] + " " + result[2] + " " + result[3]);
+					lArdoise.ajouterCommande(commande);//-----02/02
 					lArdoise.afficher();//---------------------------------------------------*****
+					derniereCommandeUndo=false;
 				}
 			}
 
@@ -177,50 +141,15 @@ int main()
 					if (f != NULL)
 					{
 						lArdoise.supprimer(f);
+						derniereCommandeUndo=true;
+
+
 
 					}
 					else
 					{
 						cout << "ERR" << endl;
 					}
-				}
-				else if (args[0].compare("DELETE") == 0)
-				{
-					string com2 = "";
-
-					for (int i = 1; i < args.size(); i++)
-					{
-						Forme* f = lArdoise.rechercheParNom(args[i]);
-
-						if (f == NULL)
-						{
-							for (int j = 1; j <= 2; j++)
-							{
-								args.erase(args.begin());
-							}
-
-							for (vector<string>::iterator it = args.begin(); it != args.end(); it++)
-							{
-								if (it < args.end() - 1)
-								{
-									com2 += *it + " ";
-								}
-								else
-								{
-									com2 += *it;
-								}
-							}
-						}
-
-						else
-						{
-							cout << "ERR" << endl;
-							cout << "# La forme " + f->getNom() + " existe dï¿½jï¿½." << endl;
-						}
-
-						ajouterForme(com2, lArdoise, false);
-					}
-
 				}
 				else if (args[0].compare("MOVE") == 0)
 				{
@@ -234,83 +163,143 @@ int main()
 					else
 					{
 						f->afficher();
-						f->deplacer(-(stringToInt(result[2])), -(stringToInt(result[3])));
+						f->deplacer(-(stringToInt(args[2])),-(stringToInt(args[3])));
+						derniereCommandeUndo=true;
+
+
 					}
 				}
 				else if (args[0].compare("LOAD") == 0)
 				{
-					for (vector<string>::iterator it = undoLoad.begin(); it != undoLoad.end(); it++)
+					int nb=stringToInt(args[2]);
+					redoLoad.clear();
+					for(int i=0;i<nb;i++)
 					{
-						vector<string> args;
-
-						Split(args, *it, ' ');
-
-						Forme* f = lArdoise.rechercheParNom(args[1]);
-
-						if (f != NULL)
-						{
-							lArdoise.supprimer(f);
-						}
+						Forme*f=lArdoise.rechercheParNom(undoLoad[0]);
+						redoLoad.insert(redoLoad.begin(),f);
+						lArdoise.supprimer(f);
+						undoLoad.erase(undoLoad.begin());
 					}
+					derniereCommandeUndo=true;
+
+
+				}
+
+				else if (args[0].compare("CLEAR") == 0)
+				{
+					int nb=stringToInt(args[1]);
+					redoClear.clear();
+					for(int i=0;i<nb;i++)
+					{
+						lArdoise.ajouter(undoClear[0],false);
+						redoClear.insert((redoClear.begin()),undoClear[0]->getNom());
+						undoClear.erase(undoClear.begin());
+					}
+					derniereCommandeUndo=true;
+
+
+				}
+				else if (args[0].compare("DELETE") == 0)
+				{
+
+					for(int i=1;i<args.size();i++)
+					{
+						lArdoise.ajouter(undoDelete[0],false);
+						undoDelete.erase(undoDelete.begin());
+					}
+
+					derniereCommandeUndo=true;
+
 				}
 			}
 		}
 
 		else if(result[0].compare("REDO")==0)
 		{
-			string com = lArdoise.redo();
 
-			if (com.compare("") == 0)
+			if(derniereCommandeUndo)
 			{
-				cout << "ERR" << endl;
+					string com = lArdoise.redo();
+
+					if (com.compare("") == 0)
+					{
+						cout << "ERR" << endl;
+					}
+					else
+					{
+						vector<string> args;
+						Split(args, com, ' ');
+
+						if (args[0].compare("S") == 0 || args[0].compare("R") == 0 || args[0].compare("PC") == 0 || args[0].compare("OR") == 0 || args[0].compare("OI") == 0)
+						{
+							Forme* f = lArdoise.rechercheParNom(args[1]);
+
+							if (f == NULL)
+							{
+								ajouterForme(com, lArdoise, false,undoDelete);
+							}
+							else
+							{
+								cout << "ERR" << endl;
+								cout << "# La forme " + f->getNom() + " existe deja." << endl;
+							}
+						}
+
+						//---------------02/02
+						else if (args[0].compare("DELETE") == 0)
+						{
+							ajouterForme(com,lArdoise,false,undoDelete);
+
+						}
+		//-------------------------------------------------------------
+
+						else if (args[0].compare("MOVE") == 0)
+						{
+							Forme* f=lArdoise.rechercheParNom(args[1]);
+							//---------------------------------------verifier que le nom existe------------
+							if(f==NULL)
+							{
+								cout<<"ERR"<<endl;
+							}
+							else
+							{
+								f->deplacer(stringToInt(args[2]),stringToInt(args[3]));
+								cout << "OK" << endl;
+							}
+						}
+
+						else if (args[0].compare("LOAD") == 0)
+						{
+							int nb=stringToInt(args[2]);
+							for(int i=0;i<nb;i++)
+							{
+								lArdoise.ajouter(redoLoad[0],false);
+								undoLoad.insert(undoLoad.begin(),redoLoad[0]->getNom());
+								redoLoad.erase(redoLoad.begin());
+							}
+						}
+						else if (args[0].compare("CLEAR") == 0)
+						{
+							int nb=stringToInt(args[1]);
+							Forme*f;
+							for(int i=0;i<nb;i++)
+							{
+								f=lArdoise.getFormes()[0];
+								undoClear.insert(undoClear.begin(),f);
+								lArdoise.supprimer(f);
+
+							}
+
+
+
+						}
+
+
+					}
 			}
 			else
 			{
-				vector<string> args;
-				Split(args, com, ' ');
-
-				if (args[0].compare("S") == 0 || args[0].compare("R") == 0 || args[0].compare("PC") == 0 || args[0].compare("OR") == 0 || args[0].compare("OI") == 0)
-				{
-					Forme* f = lArdoise.rechercheParNom(args[1]);
-
-					if (f == NULL)
-					{
-						ajouterForme(com, lArdoise, false);
-					}
-					else
-					{
-						cout << "ERR" << endl;
-						cout << "# La forme " + f->getNom() + " existe dï¿½jï¿½." << endl;
-					}
-				}
-				else if (args[0].compare("DELETE") == 0)
-				{
-					Forme* f = lArdoise.rechercheParNom(args[1]);
-
-					if (f != NULL)
-					{
-						lArdoise.supprimer(f);
-					}
-					else
-					{
-						cout << "ERR" << endl;
-					}
-				}
-
-				else if (args[0].compare("MOVE") == 0)
-				{
-					Forme* f=lArdoise.rechercheParNom(args[1]);
-					//---------------------------------------verifier que le nom existe------------
-					if(f==NULL)
-					{
-						cout<<"ERR"<<endl;
-					}
-					else
-					{
-						f->deplacer(stringToInt(args[2]),stringToInt(args[3]));
-						cout << "OK" << endl;
-					}
-				}
+				cout<<"ERR"<<endl;
 			}
 		}
 
@@ -318,7 +307,10 @@ int main()
 		{
 			lArdoise.afficherCommandes();
 		}
-
+		else if (result[0].compare("LISTANNUL") == 0)
+		{
+			lArdoise.afficherCommandesAnnulees();
+		}
 		else if(result[0].compare("LOAD")==0)
 		{
 			string com;
@@ -332,9 +324,9 @@ int main()
 							vector<Forme*> formeTemp;
 							while(getline(fichier, com))  // tant que l'on peut mettre la ligne dans "contenu"
 							{
-								ajouterForme(com,uneArdoise,true);
+								ajouterForme(com,uneArdoise,true,undoDelete);
 							}
-							for(int i=0;i<undoLoad.size();i++)
+							for(int i=0;i<uneArdoise.getFormes().size();i++)
 							{
 								if(lArdoise.rechercheParNom(uneArdoise.getFormes()[i]->getNom())!=NULL)
 								{
@@ -348,15 +340,23 @@ int main()
 							}
 							else
 							{
+								int nbFormesAjoutLoad=uneArdoise.getFormes().size();
 								for(int i=0;i<uneArdoise.getFormes().size();i++)
 								{
-									undoLoad.push_back(uneArdoise.getFormes()[i]->getNom());
+									undoLoad.insert(undoLoad.begin(),uneArdoise.getFormes()[i]->getNom());
 									lArdoise.ajouter(uneArdoise.getFormes()[i],true);
 								}
 
+
+								string nbFormeLoad=itos(nbFormesAjoutLoad);
+
+								commande=commande+" "+nbFormeLoad;
+								lArdoise.ajouterCommande(commande);//-------------02/02
+								derniereCommandeUndo=false;
 							}
 						            // instructions
 						     fichier.close();  // on ferme le fichier
+
 
 					    }
 						else
@@ -381,7 +381,29 @@ int main()
 
 		else if(result[0].compare("CLEAR")==0)
 		{
-			lArdoise.vider();
+			//lArdoise.vider();
+			Forme*f;
+
+			int tailleForme=lArdoise.getFormes().size();
+			for(int i=0;i<tailleForme;i++)
+			{
+				f=lArdoise.getFormes()[0];
+				undoClear.insert(undoClear.begin(),f);
+				lArdoise.supprimer(f);
+
+			}
+			int nbFormesAjoutLoad=tailleForme;
+
+			string nbFormeLoad=itos(nbFormesAjoutLoad);
+
+
+			commande=commande+" "+nbFormeLoad;
+			lArdoise.ajouterCommande(commande);//----------02/02
+			//au lieu de commande, donner commande plus x=formes. size comme ça quand on a undo,
+			//on remet les x premieres formes dans l'ardoise
+
+
+			derniereCommandeUndo=false;
 		}
 
 		else
@@ -400,6 +422,16 @@ int main()
 	return 0;
 
 }
+
+string itos(int i)  // convert int to string
+{
+    stringstream s;
+    s << i;
+    return s.str();
+}
+
+
+
 
 bool estConvexe(const vector<Point> &lesPoints)
 {
@@ -479,7 +511,7 @@ int Split(vector<string>& vecteur, string chaine, char separateur)
 
 //---------------------Ajouter forme--------------------------------------------------------------------------------------------
 
-void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
+void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& undoDelete)
 {
 	vector<string> resultLoad;
 	Split(resultLoad, commande,' ');
@@ -498,7 +530,12 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
 			Point a(stringToInt(resultLoad[2]),stringToInt(resultLoad[3]));
 			Point b(stringToInt(resultLoad[4]),stringToInt(resultLoad[5]));
 			uneArdoise.ajouter(new Segment(resultLoad[1],commande,segm,a,b), false);
-			cout<<"OK"<<endl;
+			if(!Load)
+			{
+				uneArdoise.ajouterCommande(commande);//---02/02
+				derniereCommandeUndo=false;
+				cout<<"OK"<<endl;
+			}
 
 			}
 		}
@@ -536,7 +573,12 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
 							Point c(stringToInt(resultLoad[2]),stringToInt(resultLoad[3]));
 							Point d(stringToInt(resultLoad[4]),stringToInt(resultLoad[5]));
 							uneArdoise.ajouter(new Rectangle(resultLoad[1],commande,rect,c,d), false);
-							cout<<"OK"<<endl;
+							if(!Load)
+							{
+								uneArdoise.ajouterCommande(commande);//---02/02
+								derniereCommandeUndo=false;
+								cout<<"OK"<<endl;
+							}
 							}
 						}
 				}
@@ -575,7 +617,12 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
 						if(estConvexe(lesPoints))
 						{
 							uneArdoise.ajouter(new PolygoneConvexe(resultLoad[1],commande,poly,lesPoints), false);
-							cout<<"OK"<<endl;
+							if(!Load)
+							{
+								uneArdoise.ajouterCommande(commande);//---02/02
+								derniereCommandeUndo=false;
+								cout<<"OK"<<endl;
+							}
 
 						}
 						//------------------------------------------------------------------------------
@@ -633,9 +680,12 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
 					if(!Load)
 					{
 						uneArdoise.getFormes().back()->changerNom();
+						uneArdoise.ajouterCommande(commande);//---02/02
+						derniereCommandeUndo=false;
+						cout<<"OK"<<endl;
 					}
-					cout<<"OK"<<endl;
-					uneArdoise.afficher();
+
+
 				}
 
 				//-------------------------------------------------------------------------
@@ -686,9 +736,10 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
 								if(!Load)
 								{
 									uneArdoise.getFormes().back()->changerNom();
+									uneArdoise.ajouterCommande(commande);//---02/02
+									derniereCommandeUndo=false;
+									cout<<"OK"<<endl;
 								}
-								cout<<"OK"<<endl;
-								uneArdoise.afficher();
 							}
 							//-------------------------------------------------------------------------------------------
 							else
@@ -704,6 +755,58 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load)
 
 
 			}
+
+			else if(resultLoad[0].compare("DELETE")==0)
+						{
+
+							//----------------------On verifie qu'il y ait suffisamment d'arguments-------------------------------------------------
+							if(resultLoad.size()<2)
+							{
+								cout<<"ERR"<<endl;
+							}
+							else
+							{
+									//----------------On regarde si tous les noms existent------------------------------------------------------------------
+									bool nomsExistent=true;
+									for(int i=1;i<resultLoad.size();i++)
+									{
+										if(uneArdoise.rechercheParNom(resultLoad[i])==NULL)
+										{
+											nomsExistent=false;
+										}
+									}
+									//---------------------------------------------------------------------------------
+									//----------------------------Supprimer les formes---------------------------------
+									Forme* f;
+									if(nomsExistent)
+									{
+										//string com = "DELETE";
+
+										for(int i=1;i<resultLoad.size();i++)
+										{
+											f=uneArdoise.rechercheParNom(resultLoad[i]);
+
+											undoDelete.insert(undoDelete.begin(),f);//ajout du 02/02
+											uneArdoise.supprimer(f);
+											//com += " " + resultLoad[i];
+										}
+										if(!Load)
+										{
+
+											uneArdoise.ajouterCommande(commande);//---02/02
+											derniereCommandeUndo=false;
+											cout<<"OK"<<endl;
+										}
+									}
+									//----------------------------------------------------------------------------------
+									else
+									{
+										cout<<"ERR"<<endl;
+									}
+							}
+
+
+						}
 
 }//---------------------------------------------------Fin ajouter forme--------------------------------------------------------------
 
