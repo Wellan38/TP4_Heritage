@@ -59,7 +59,7 @@ void Ardoise::ajouter(Forme* f, bool load)
 
 void Ardoise::vider()
 {
-	//TODO Ajouter la sauvegarde du mod�le actuel dans un fichier "SauvegardePourClear.txt"
+
 
 	while (!formes.empty())
 	{
@@ -119,21 +119,6 @@ void Ardoise::enumerer() const
 void Ardoise::sauvegarder(string nomFichier) const
 {
 
-    /* ofstream fichier(nomFichier.c_str(), ios::out | ios::trunc);  //d�claration du flux et ouverture du fichier
-
-        if(fichier)  // si l'ouverture a r�ussi
-        {
-            // instructions
-        		for(int i=0;i<formes.size();i++)
-        		{
-        			fichier<<formes[i]->getSauvegarde()<<endl;
-        		}
-                fichier.close();  // on referme le fichier
-        }
-        else  // sinon
-                cerr << "Erreur � l'ouverture !" << endl;*/
-
-	//---------------------27/01/16-----------------------------------
 	for(int i=0;i<formes.size();i++)
 	{
 		formes[i]->sauver(nomFichier);
@@ -157,19 +142,19 @@ Forme* Ardoise::rechercheParNom(const string& nom)
 		}
 		if(i<formes.size())
 		{
-			cout << "Forme trouvée" << endl;
+			//cout << "# Forme trouvee" << endl;
 			return formes[i];
 		}
 
 		else
 		{
-			cout << "Forme non trouvée" << endl;
+			//cout << "# Forme non trouvee" << endl;
 			return NULL;
 		}
 	}
 	else
 	{
-		cout << "Liste vide" << endl;
+		//cout << "Liste vide" << endl;
 		return NULL;
 	}
 }

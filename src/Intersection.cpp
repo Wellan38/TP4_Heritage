@@ -81,17 +81,17 @@ Intersection* Intersection::clone()
 void Intersection::afficher()
 {
 
-	cout<<formes.size()<<endl;
+
 	cout<<"OI "<<this->nom;
 		for(unsigned int i=0;i<formes.size();i++)
 			{
 				cout<<" "<<formes[i]->getNom();
 			}
 		cout<<endl;
-		for(unsigned int i=0;i<formes.size();i++)
+		/*for(unsigned int i=0;i<formes.size();i++)
 				{
 					formes[i]->afficher();
-				}
+				}*/
 }
 
 void Intersection::deplacer(int dx,int dy)

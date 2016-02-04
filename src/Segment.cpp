@@ -72,27 +72,65 @@ bool Segment::contient(int x, int y)
 {
 	// On commence par vérifier si tous les points sont alignés
 
-	double coeffDirAB = (pointB.getY() - pointA.getY()) / (pointB.getX() - pointA.getX());
-	double coeffDirAC = (y - pointA.getY()) / (x - pointA.getX());
+	if(((x-pointA.getX())!=0)&&((pointB.getX()-pointA.getX())!=0))
+	{
+		double coeffDirAB = (pointB.getY() - pointA.getY()) / (pointB.getX() - pointA.getX());
+		double coeffDirAC = (y - pointA.getY()) / (x - pointA.getX());
 
-	double longueurAB = sqrt(pow(pointB.getY() - pointA.getY(), 2) + pow(pointB.getX() - pointA.getX(), 2));
-	double longueurAC = sqrt(pow(y - pointA.getY(), 2) + pow(x - pointA.getX(), 2));
+		double longueurAB = sqrt(pow(pointB.getY() - pointA.getY(), 2) + pow(pointB.getX() - pointA.getX(), 2));
+		double longueurAC = sqrt(pow(y - pointA.getY(), 2) + pow(x - pointA.getX(), 2));
 
-	if (abs(coeffDirAB) != abs(coeffDirAC))
-	{
-		return false; // Les points ne sont pas alignés, donc (x,y) n'appartient pas au segment
+		if (abs(coeffDirAB) != abs(coeffDirAC))
+		{
+			return false; // Les points ne sont pas alignés, donc (x,y) n'appartient pas au segment
+		}
+		else if (coeffDirAB == - coeffDirAC)
+		{
+			return false;
+		}
+		else if (longueurAC > longueurAB)
+		{
+			return false; // (x,y) est sur la droite (AB), mais pas sur le segment
+		}
+		else
+		{
+			return true;
+		}
 	}
-	else if (coeffDirAB == - coeffDirAC)
-	{
-		return false;
-	}
-	else if (longueurAC > longueurAB)
-	{
-		return false; // (x,y) est sur la droite (AB), mais pas sur le segment
-	}
+
 	else
 	{
-		return true;
+		if((x==pointA.getX())&&(y==pointA.getY()))
+		{
+			return true;
+		}
+		else if((x==pointB.getX())&&(y==pointB.getY()))
+		{
+			return true;
+		}
+		else if((pointB.getX()==pointA.getX()))
+		{
+			if(x==pointB.getX())
+			{
+				if((pointB.getY()>=y)&&(y>=pointA.getY()))
+				{
+					return true;
+				}
+				else if((pointB.getY()<=y)&&(y<=pointA.getY()))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 }
 

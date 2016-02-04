@@ -88,10 +88,10 @@ void Union::afficher()
 			cout<<" "<<formes[i]->getNom();
 		}
 	cout<<endl;
-	for(unsigned int i=0;i<formes.size();i++)
-			{
-				formes[i]->afficher();
-			}
+	/*for(unsigned int i=0;i<formes.size();i++)
+	{
+		formes[i]->afficher();
+	}*/
 
 
 }

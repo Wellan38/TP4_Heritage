@@ -32,6 +32,7 @@ bool estConvexe(const vector<Point> &lesPoints);
 bool nbPairCoordonnees(int debut,int fin);
 void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& undoDelete);
 string itos(int i);
+void viderVector(vector<Forme*>& vect);
 
 bool derniereCommandeUndo=false;
 int main()
@@ -61,6 +62,8 @@ int main()
 			if (result.size() != 4)
 			{
 				cout << "ERR" << endl;
+				cout<<"# Nombre de parametres incorrect"<<endl;
+
 			}
 			else
 			{
@@ -69,6 +72,7 @@ int main()
 				if (f == NULL)
 				{
 					cout << "ERR" << endl;
+					cout<<"# La forme n'existe pas"<<endl;
 				}
 				else
 				{
@@ -94,6 +98,7 @@ int main()
 			if(result.size()!=4)
 			{
 				cout<<"ERR"<<endl;
+				cout<<"# Nombre de parametres incorrect"<<endl;
 			}
 			else
 			{
@@ -103,14 +108,16 @@ int main()
 				if(f==NULL)
 				{
 					cout<<"ERR"<<endl;
+					cout<<"# La forme n'existe pas"<<endl;
 				}
 				else
 				{
 					f->deplacer(stringToInt(result[2]),stringToInt(result[3]));
 					//lArdoise.ajouterCommande("MOVE " + result[1] + " " + result[2] + " " + result[3]);
 					lArdoise.ajouterCommande(commande);//-----02/02
-					lArdoise.afficher();//---------------------------------------------------*****
 					derniereCommandeUndo=false;
+					cout<<"OK"<<endl;
+					cout<<"# Forme deplacee"<<endl;
 				}
 			}
 
@@ -128,6 +135,7 @@ int main()
 			if (com.compare("") == 0)
 			{
 				cout << "ERR" << endl;
+				cout<<"# Pas de commande a annuler"<<endl;
 			}
 			else
 			{
@@ -142,6 +150,8 @@ int main()
 					{
 						lArdoise.supprimer(f);
 						derniereCommandeUndo=true;
+						cout<<"OK"<<endl;
+						cout<<"# Commande annulee"<<endl;
 
 
 
@@ -165,6 +175,8 @@ int main()
 						f->afficher();
 						f->deplacer(-(stringToInt(args[2])),-(stringToInt(args[3])));
 						derniereCommandeUndo=true;
+						cout<<"OK"<<endl;
+						cout<<"# Commande annulee"<<endl;
 
 
 					}
@@ -181,6 +193,8 @@ int main()
 						undoLoad.erase(undoLoad.begin());
 					}
 					derniereCommandeUndo=true;
+					cout<<"OK"<<endl;
+					cout<<"# Commande annulee"<<endl;
 
 
 				}
@@ -196,6 +210,8 @@ int main()
 						undoClear.erase(undoClear.begin());
 					}
 					derniereCommandeUndo=true;
+					cout<<"OK"<<endl;
+					cout<<"# Commande annulee"<<endl;
 
 
 				}
@@ -209,6 +225,8 @@ int main()
 					}
 
 					derniereCommandeUndo=true;
+					cout<<"OK"<<endl;
+					cout<<"# Commande annulee"<<endl;
 
 				}
 			}
@@ -224,6 +242,7 @@ int main()
 					if (com.compare("") == 0)
 					{
 						cout << "ERR" << endl;
+						cout<<"#Pas de commande annulee"<<endl;
 					}
 					else
 					{
@@ -236,7 +255,9 @@ int main()
 
 							if (f == NULL)
 							{
-								ajouterForme(com, lArdoise, false,undoDelete);
+								ajouterForme(com, lArdoise, true,undoDelete);
+								cout<<"OK"<<endl;
+								cout<<"# Commande retablie"<<endl;
 							}
 							else
 							{
@@ -248,7 +269,9 @@ int main()
 						//---------------02/02
 						else if (args[0].compare("DELETE") == 0)
 						{
-							ajouterForme(com,lArdoise,false,undoDelete);
+							ajouterForme(com,lArdoise,true,undoDelete);
+							cout<<"OK"<<endl;
+							cout<<"# Commande retablie"<<endl;
 
 						}
 		//-------------------------------------------------------------
@@ -264,7 +287,8 @@ int main()
 							else
 							{
 								f->deplacer(stringToInt(args[2]),stringToInt(args[3]));
-								cout << "OK" << endl;
+								cout<<"OK"<<endl;
+								cout<<"# Commande retablie"<<endl;
 							}
 						}
 
@@ -277,6 +301,8 @@ int main()
 								undoLoad.insert(undoLoad.begin(),redoLoad[0]->getNom());
 								redoLoad.erase(redoLoad.begin());
 							}
+							cout<<"OK"<<endl;
+							cout<<"# Commande retablie"<<endl;
 						}
 						else if (args[0].compare("CLEAR") == 0)
 						{
@@ -289,6 +315,8 @@ int main()
 								lArdoise.supprimer(f);
 
 							}
+							cout<<"OK"<<endl;
+							cout<<"# Commande retablie"<<endl;
 
 
 
@@ -300,6 +328,7 @@ int main()
 			else
 			{
 				cout<<"ERR"<<endl;
+				cout<<"# La derniere commande n'est pas un undo"<<endl;
 			}
 		}
 
@@ -313,56 +342,70 @@ int main()
 		}
 		else if(result[0].compare("LOAD")==0)
 		{
-			string com;
-			Ardoise uneArdoise;
-			string a=result[1];
-			bool b =true;
-			ifstream fichier(a.c_str(), ios::in);  // on ouvre le fichier en lecture
+			if(result.size()!=2)
+			{
+				cout<<"ERR"<<endl;
+				cout<<"# Nombre de parametres incorrect"<<endl;
+			}
+
+			else
+			{
+
+					string com;
+					Ardoise uneArdoise;
+					string a=result[1];
+					bool b =true;
+					ifstream fichier(a.c_str(), ios::in);  // on ouvre le fichier en lecture
 
 						if(fichier)  // si l'ouverture a rï¿½ussi
-					    {
-							vector<Forme*> formeTemp;
-							while(getline(fichier, com))  // tant que l'on peut mettre la ligne dans "contenu"
-							{
-								ajouterForme(com,uneArdoise,true,undoDelete);
-							}
-							for(int i=0;i<uneArdoise.getFormes().size();i++)
-							{
-								if(lArdoise.rechercheParNom(uneArdoise.getFormes()[i]->getNom())!=NULL)
-								{
-									b=false;
-									break;
-								}
-							}
-							if(!b)
-							{
-								cout<<"ERR"<<endl;
+						{
+									vector<Forme*> formeTemp;
+									while(getline(fichier, com))  // tant que l'on peut mettre la ligne dans "contenu"
+									{
+										ajouterForme(com,uneArdoise,true,undoDelete);
+									}
+									for(int i=0;i<uneArdoise.getFormes().size();i++)
+									{
+										if(lArdoise.rechercheParNom(uneArdoise.getFormes()[i]->getNom())!=NULL)
+										{
+											b=false;
+											break;
+										}
+									}
+									if(!b)
+									{
+										cout<<"ERR"<<endl;
+										cout<<"# Une forme du meme nom existe deja"<<endl;
+									}
+									else
+									{
+										int nbFormesAjoutLoad=uneArdoise.getFormes().size();
+										for(int i=0;i<uneArdoise.getFormes().size();i++)
+										{
+											undoLoad.insert(undoLoad.begin(),uneArdoise.getFormes()[i]->getNom());
+											lArdoise.ajouter(uneArdoise.getFormes()[i],true);
+										}
+
+
+										string nbFormeLoad=itos(nbFormesAjoutLoad);
+
+										commande=commande+" "+nbFormeLoad;
+										lArdoise.ajouterCommande(commande);//-------------02/02
+										derniereCommandeUndo=false;
+										cout<<"OK"<<endl;
+										cout<<"# Le fichier: "+result[1]+" a ete charge"<<endl;
+									}
+											// instructions
+									 fichier.close();  // on ferme le fichier
+
+
 							}
 							else
 							{
-								int nbFormesAjoutLoad=uneArdoise.getFormes().size();
-								for(int i=0;i<uneArdoise.getFormes().size();i++)
-								{
-									undoLoad.insert(undoLoad.begin(),uneArdoise.getFormes()[i]->getNom());
-									lArdoise.ajouter(uneArdoise.getFormes()[i],true);
-								}
-
-
-								string nbFormeLoad=itos(nbFormesAjoutLoad);
-
-								commande=commande+" "+nbFormeLoad;
-								lArdoise.ajouterCommande(commande);//-------------02/02
-								derniereCommandeUndo=false;
+								cout << "ERR" << endl;
+								cout<<"# Echec lors de l'ouverture du fichier"<<endl;
 							}
-						            // instructions
-						     fichier.close();  // on ferme le fichier
-
-
-					    }
-						else
-						{
-							cout << "ERR" << endl;
-						}
+				}
 		}
 
 		else if(result[0].compare("SAVE")==0)
@@ -370,12 +413,14 @@ int main()
 			if(result.size()!=2)
 			{
 				cout<<"ERR"<<endl;
+				cout<<"# Nombre de parametres incorrect"<<endl;
 			}
 
 			else
 			{
 				lArdoise.sauvegarder(result[1]);
 				cout<<"OK"<<endl;
+				cout<<"# Ardoise sauvegardee dans:"+result[1]<<endl;
 			}
 		}
 
@@ -393,7 +438,8 @@ int main()
 
 			}
 			int nbFormesAjoutLoad=tailleForme;
-
+			cout<<"OK"<<endl;
+			cout<<"# Ardoise videe"<<endl;
 			string nbFormeLoad=itos(nbFormesAjoutLoad);
 
 
@@ -411,17 +457,34 @@ int main()
 			if((commande.compare("EXIT")!=0)&&(result[0].compare("S"))&&(result[0].compare("R"))&&(result[0].compare("DELETE"))&&(result[0].compare("PC"))&&(result[0].compare("OR"))&&(result[0].compare("OI")))
 			{
 				cout<<"ERR"<<endl;
+				cout<<"# Commande incorrecte"<<endl;
 			}
 		}
 
 
 
 	}while((commande.compare("EXIT"))!=0);
-
-	//lArdoise.vider();
+	viderVector(undoDelete);
+	viderVector(undoClear);
+	viderVector(redoLoad);
+	lArdoise.vider();
 	return 0;
 
 }
+
+void viderVector(vector<Forme*>& vect)
+{
+	for(int i=0;i<vect.size();i++)
+	{
+		delete vect[i];
+	}
+	vect.clear();
+}
+
+
+
+
+
 
 string itos(int i)  // convert int to string
 {
@@ -523,6 +586,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 			if(resultLoad.size()!=6)//--------------- Si il n'y a pas au moins 6 arguments dans la commande
 			{
 				cout<<"ERR"<<endl;
+				cout<<"# Nombre de parametres incorrect"<<endl;
 			}
 
 			else
@@ -535,6 +599,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 				uneArdoise.ajouterCommande(commande);//---02/02
 				derniereCommandeUndo=false;
 				cout<<"OK"<<endl;
+				cout<<"# "+commande+" ajoute a l'ardoise"<<endl;
 			}
 
 			}
@@ -543,6 +608,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 		else
 		{
 			cout<<"ERR"<<endl;
+			cout<<"# Une forme du meme nom existe deja"<<endl;
 		}
 
 	}
@@ -557,6 +623,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 						if(resultLoad.size()!=6)
 						{
 							cout<<"ERR"<<endl;
+							cout<<"# Nombre de parametres incorrect"<<endl;
 						}
 	                //--------------------------------------------------------------------
 						else
@@ -566,6 +633,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 
 							{
 								cout<<"ERR"<<endl;
+								cout<<"# Ce n'est pas un rectangle bien defini "<<endl;
 							}
 							//-----------------------------------------------------------------------------------------------------
 							else
@@ -578,6 +646,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 								uneArdoise.ajouterCommande(commande);//---02/02
 								derniereCommandeUndo=false;
 								cout<<"OK"<<endl;
+								cout<<"# "+commande+" ajoute a l'ardoise"<<endl;
 							}
 							}
 						}
@@ -585,6 +654,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 				else
 				{
 					cout<<"ERR"<<endl;
+					cout<<"# Une forme du meme nom existe deja"<<endl;
 				}
 			}
 
@@ -596,10 +666,12 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 					if(resultLoad.size()<8)//---------si il n'y a pas assez d'arguments--------------
 					{
 						cout<<"ERR"<<endl;
+						cout<<"# Nombre de parametres incorrect"<<endl;
 					}
 					else if(!nbPairCoordonnees(2,resultLoad.size()))//--------------si le nombre de coordonnï¿½es de ppints n'est pas pair
 					{
 						cout<<"ERR"<<endl;
+						cout<<"# Nombre de parametres incorrect (coordonnee ou nom manquant)"<<endl;
 
 					}
 					else
@@ -622,19 +694,26 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 								uneArdoise.ajouterCommande(commande);//---02/02
 								derniereCommandeUndo=false;
 								cout<<"OK"<<endl;
+								cout<<"# "+resultLoad[1]+" cree"<<endl;
 							}
 
 						}
 						//------------------------------------------------------------------------------
 						else
 						{
-							cout<<"message d'erreur"<<endl;
+							cout<<"ERR"<<endl;
+							cout<<"# Polynome non convexe"<<endl;
 						}
 					}
+
+
+
+
 				}
 				else
 				{
 					cout<<"ERR"<<endl;
+					cout<<"# Une forme du meme nom existe deja"<<endl;
 				}
 
 			}
@@ -647,6 +726,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 			if(resultLoad.size()<4)//--------------------si il n'y a pas assez d'arguments--------------
 			{
 				cout<<"ERR"<<endl;
+				cout<<"# Nombre de parametres incorrect"<<endl;
 			}
 
 			//-----------------Si les noms n'existent pas-----------------------------
@@ -683,6 +763,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 						uneArdoise.ajouterCommande(commande);//---02/02
 						derniereCommandeUndo=false;
 						cout<<"OK"<<endl;
+						cout<<"# "+resultLoad[1]+": cree"<<endl;
 					}
 
 
@@ -692,8 +773,14 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 				else
 				{
 					cout<<"ERR"<<endl;
+					cout<<"# Une des formes a unir n'existe pas"<<endl;
 				}
 			}
+		}
+		else
+		{
+			cout<<"ERR"<<endl;
+			cout<<"# Une forme du meme nom existe deja"<<endl;
 		}
 	}
 
@@ -707,6 +794,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 						if(resultLoad.size()<4)//---------------si il n'y a pas assez d'arguments--------------
 						{
 							cout<<"ERR"<<endl;
+							cout<<"# Nombre de parametres incorrect"<<endl;
 						}
 						//-----------------------si les noms n'existent pas dans la liste------------------
 						else
@@ -739,18 +827,21 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 									uneArdoise.ajouterCommande(commande);//---02/02
 									derniereCommandeUndo=false;
 									cout<<"OK"<<endl;
+									cout<<"# "+resultLoad[1]+": cree"<<endl;
 								}
 							}
 							//-------------------------------------------------------------------------------------------
 							else
 							{
 								cout<<"ERR"<<endl;
+								cout<<"# Une des formes a intersecter n'existe pas"<<endl;
 							}
 						}
 				}
 				else
 				{
 					cout<<"ERR"<<endl;
+					cout<<"# Une forme du meme nom existe deja"<<endl;
 				}
 
 
@@ -763,6 +854,7 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 							if(resultLoad.size()<2)
 							{
 								cout<<"ERR"<<endl;
+								cout<<"# Aucune forme précisée"<<endl;
 							}
 							else
 							{
@@ -796,12 +888,14 @@ void ajouterForme(string commande,Ardoise& uneArdoise,bool Load,vector<Forme*>& 
 											uneArdoise.ajouterCommande(commande);//---02/02
 											derniereCommandeUndo=false;
 											cout<<"OK"<<endl;
+											cout<<"# Formes supprimees"<<endl;
 										}
 									}
 									//----------------------------------------------------------------------------------
 									else
 									{
 										cout<<"ERR"<<endl;
+										cout<<"# Un des noms ne correspond a aucune forme"<<endl;
 									}
 							}
 
